@@ -1,14 +1,14 @@
 # SOLID Principles Notes
 
-* [Single Responsibility](#single-responsibility-principle)
-* [Open Closed Principle](#open-closed-principle)
-* [Liskov Substitution Principle](#liskov-substitution-principle)
-* [Interface Segregation Principle](#interface-segregation-principle)
-* [Dependency Inversion Principle](#dependency-inversion-principle)
-* [Inversion of Control](#inversion-of-control)
-* [Dependency Injection](#dependency-injection)
-* [Service scope](#service-scope)
-* [Miscellaneous Encyclopedia](#miscellaneous-encyclopedia)
+* [Single Responsibility](solid-principles.md#single-responsibility-principle)
+* [Open Closed Principle](solid-principles.md#open-closed-principle)
+* [Liskov Substitution Principle](solid-principles.md#liskov-substitution-principle)
+* [Interface Segregation Principle](solid-principles.md#interface-segregation-principle)
+* [Dependency Inversion Principle](solid-principles.md#dependency-inversion-principle)
+* [Inversion of Control](solid-principles.md#inversion-of-control)
+* [Dependency Injection](solid-principles.md#dependency-injection)
+* [Service scope](solid-principles.md#service-scope)
+* [Miscellaneous Encyclopedia](solid-principles.md#miscellaneous-encyclopedia)
 
 ## Overview
 
@@ -94,7 +94,7 @@ High level modules/classes shouldn't depend on low-level modules/classes.
 
 ### Class dependencies
 
-The idea is that classes should be **honest** with their dependencies so that they are *explicit*. Having hidden or implicit dependencies makes it very hard to unit test and change/extended functionality.
+The idea is that classes should be **honest** with their dependencies so that they are _explicit_. Having hidden or implicit dependencies makes it very hard to unit test and change/extended functionality.
 
 ## Inversion of Control
 
@@ -104,9 +104,9 @@ Simply put, it is when the control is inverted to what it was previously. This o
 
 From Martin Fowler's blog:
 
->Let's consider a simple example. Imagine I'm writing a program to get some information from a user and I'm using a command line enquiry. I might do it something like this
+> Let's consider a simple example. Imagine I'm writing a program to get some information from a user and I'm using a command line enquiry. I might do it something like this
 >
->```ruby
+> ```ruby
 >  #ruby
 >  puts 'What is your name?'
 >  name = gets
@@ -114,13 +114,13 @@ From Martin Fowler's blog:
 >  puts 'What is your quest?'
 >  quest = gets
 >  process_quest(quest)
->```
+> ```
 >
->In this interaction, my code is in control: it decides when to ask questions, when to read responses, and when to process those results.
+> In this interaction, my code is in control: it decides when to ask questions, when to read responses, and when to process those results.
 >
->However if I were were to use a windowing system to do something like this, I would do it by configuring a window.
+> However if I were were to use a windowing system to do something like this, I would do it by configuring a window.
 >
->```python
+> ```python
 >  require 'tk'
 >  root = TkRoot.new()
 >  name_label = TkLabel.new() {text "What is Your Name?"}
@@ -132,11 +132,11 @@ From Martin Fowler's blog:
 >  quest = TkEntry.new(root).pack
 >  quest.bind("FocusOut") {process_quest(quest)}
 >  Tk.mainloop()
->```
+> ```
 >
->There's a **big** difference now in the flow of control between these programs - in particular the control of when the `process_name` and `process_quest` methods are called. In the command line form I control when these methods are called, but in the window example I don't.
+> There's a **big** difference now in the flow of control between these programs - in particular the control of when the `process_name` and `process_quest` methods are called. In the command line form I control when these methods are called, but in the window example I don't.
 >
->Instead I **hand control over** to the windowing system (with the `Tk.mainloop` command). It then decides when to call my methods, based on the bindings I made when creating the form. The control is inverted - it calls me rather me calling the framework. This phenomenon is Inversion of Control.
+> Instead I **hand control over** to the windowing system (with the `Tk.mainloop` command). It then decides when to call my methods, based on the bindings I made when creating the form. The control is inverted - it calls me rather me calling the framework. This phenomenon is Inversion of Control.
 
 This can still be a little confusing and it doesn't help when it is often used interchangeably with Dependency Injection/Inversion!
 
@@ -209,11 +209,11 @@ A nice example from [Stack Overflow with examples](https://stackoverflow.com/que
 
 ### Scoped
 
->Scoped objects are the same within a request, but different across different requests.
+> Scoped objects are the same within a request, but different across different requests.
 
 ### Singleton
 
->Singleton objects are the same for every object and every request.
+> Singleton objects are the same for every object and every request.
 
 There are some interesting situations where if you have a parent service that has transient dependencies; the transient dependencies will not be different. A better [example is detailed here](https://dotnetcoretutorials.com/2017/03/25/net-core-dependency-injection-lifetimes-explained/).
 
@@ -249,8 +249,7 @@ Read [this MS blog first](https://blogs.msdn.microsoft.com/ericlippert/2009/11/3
 
 If it preserves the ordering of types (≤), which orders types from more **specific** to more **generic**.
 
-For example, `List` would be covariant if
-`S` is a subtype of `T` **iff** `List[S]` is a subtype of `List[T]`
+For example, `List` would be covariant if `S` is a subtype of `T` **iff** `List[S]` is a subtype of `List[T]`
 
 #### Contravariance
 

@@ -1,10 +1,10 @@
 # Design Patterns
 
-* [Singleton Pattern](#singleton-pattern)
-* [Abstract Factory Pattern](#abstract-factory-pattern)
-* [Proxy Pattern](#proxy-pattern)
-* [Repository Pattern](#repository-pattern)
-* [Command Query Responsibility Segregation Pattern](#command-query-responsibility-segregation-pattern)
+* [Singleton Pattern](design-patterns.md#singleton-pattern)
+* [Abstract Factory Pattern](design-patterns.md#abstract-factory-pattern)
+* [Proxy Pattern](design-patterns.md#proxy-pattern)
+* [Repository Pattern](design-patterns.md#repository-pattern)
+* [Command Query Responsibility Segregation Pattern](design-patterns.md#command-query-responsibility-segregation-pattern)
 
 ## Resources
 
@@ -28,7 +28,7 @@ By constructing a dedicated class for encapsulating the global instance for acce
 1. Control access to sole instance - the class encapsulates the sole instance and therefore can control access to it
 2. Avoid polluting the global name space
 3. Extensible
-    * For static classes, they cannot be inherited, cannot implement interfaces and lazy loaded.
+   * For static classes, they cannot be inherited, cannot implement interfaces and lazy loaded.
 4. Permit additional instances if required
 
 #### Sample code
@@ -81,19 +81,19 @@ Diagrams are much easier to understand - the above was a snippet from [Design Pa
 ### Consequences
 
 1. Isolates concrete classes
-    * Clients operate on abstractions and are isolated from implementation classes
+   * Clients operate on abstractions and are isolated from implementation classes
 2. Changing product families are easy
-    * Single point of where to swap out product families
+   * Single point of where to swap out product families
 3. Consistency
-    * Products/objects within the product families are consistent and usages are grouped together
+   * Products/objects within the product families are consistent and usages are grouped together
 4. Supporting new product families or a different type of factory can be challenging
-    * Depending on the implementation, be mindful of the Open/Closed principle
+   * Depending on the implementation, be mindful of the Open/Closed principle
 
 ## Proxy Pattern
 
 ### Intent
 
->To provide a surrogate/substitute/proxy for another object to *control access* to it.
+> To provide a surrogate/substitute/proxy for another object to _control access_ to it.
 
 ### Motivation
 
@@ -141,11 +141,11 @@ public interface IRepository<T>
 
 ### Motivation
 
-The traditional method of accessing data is to treat it as a CRUD datastore. However, as the system grows in complexity, this model may not be sufficient as we may look at the information in a different way to the *record store*, perhaps combining multiple records to create a virtual records and so on. For updating, we may find validation rules that only allow certain combinations of data to be stored.
+The traditional method of accessing data is to treat it as a CRUD datastore. However, as the system grows in complexity, this model may not be sufficient as we may look at the information in a different way to the _record store_, perhaps combining multiple records to create a virtual records and so on. For updating, we may find validation rules that only allow certain combinations of data to be stored.
 
-This leads to multiple representations of information. Developers build their own *conceptual model* which they use to manipulate core elements of the model and the persistent storage is often as close to this model as possible.
+This leads to multiple representations of information. Developers build their own _conceptual model_ which they use to manipulate core elements of the model and the persistent storage is often as close to this model as possible.
 
-CQRS splits the conceptual model into separate models for update and display - **Command** and **Query** Separation. *The rationale is that for many problems, particularly in more complicated domains, have the same conceptual model for commands and queries leads to to a more complex model that does neither well.*
+CQRS splits the conceptual model into separate models for update and display - **Command** and **Query** Separation. _The rationale is that for many problems, particularly in more complicated domains, have the same conceptual model for commands and queries leads to to a more complex model that does neither well._
 
 Note that the statement is in theory however in practice, CQRS is a **significant** mental leap as well as in complexity, often resulting in a drag on productivity and increased risk.
 

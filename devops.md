@@ -6,10 +6,10 @@ Some of this may affect the application's architecture, code changes etc. I hard
 
 ## Deployment strategies
 
-* [Blue Green](#blue-green)
-* [Rolling upgrade](#rolling-upgrade)
-* [Canary release](#canary-release)
-* [A/B Testing](#ab-testing)
+* [Blue Green](devops.md#blue-green)
+* [Rolling upgrade](devops.md#rolling-upgrade)
+* [Canary release](devops.md#canary-release)
+* [A/B Testing](devops.md#ab-testing)
 
 ### Blue Green
 

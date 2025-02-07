@@ -2,9 +2,9 @@
 
 Below is a summarized version of the [Microsoft Windows Documentation - Pipes](https://docs.microsoft.com/en-us/windows/win32/ipc/pipes).
 
-* [Anonymous Pipes](#anonymous-pipes)
-* [Named Pipes](#named-pipes)
-* [Code examples](#examples)
+* [Anonymous Pipes](windows-pipes.md#anonymous-pipes)
+* [Named Pipes](windows-pipes.md#named-pipes)
+* [Code examples](windows-pipes.md#examples)
 
 ## Overview
 
@@ -21,7 +21,7 @@ The term pipe, as used here, implies that a pipe is used as an information condu
 
 ## Anonymous Pipes
 
-An anonymous pipe is an **unnamed**, one-way pipe that typically transfers data between a parent process and a child process. Anonymous pipes are always local; they *cannot* be used for communication over a network.
+An anonymous pipe is an **unnamed**, one-way pipe that typically transfers data between a parent process and a child process. Anonymous pipes are always local; they _cannot_ be used for communication over a network.
 
 An anonymous pipe exists until all pipe handles, both read and write, have been closed. A process can close its pipe handles by using the `CloseHandle` function. All pipe handles are also closed when the process terminates.
 
@@ -69,7 +69,7 @@ Named pipes can be used to provide communication between processes on the same c
 
 Usually in the format: `\\ServerName\pipe\PipeName`.
 
-`ServerName` is either the name of a remote computer or a period, to specify the local computer. The pipe name string specified by `PipeName` can include any character other than a backslash, including numbers and special characters. The entire pipe name string can be up to 256 characters long. Pipe names are *not* case-sensitive.
+`ServerName` is either the name of a remote computer or a period, to specify the local computer. The pipe name string specified by `PipeName` can include any character other than a backslash, including numbers and special characters. The entire pipe name string can be up to 256 characters long. Pipe names are _not_ case-sensitive.
 
 The pipe server cannot create a pipe on another computer, so `CreateNamedPipe` must use a period for the server name, e.g. `\\.\pipe\PipeName`.
 
@@ -108,7 +108,7 @@ A single-threaded server is easier to coordinate operations that affect multiple
 
 Impersonation enables the server thread to perform actions on a behalf of the client, but **within the limits of the client's security context**.
 
-A named pipe server thread can call the `ImpersonateNamedPipeClient` function to assume the access token of the user connected to the client end of the pipe. For example, a name pipe server can provide access to a database of file system to which the pipe server has privileged access to. When a pipe client sends a request to the server, the server impersonates the client and attempts to access the protected database. The system then grants/denies the server's access, *based on the security level of the client*. Once this operation has been completed, the server can use the `ReverToSelf` function to restore its original security token.
+A named pipe server thread can call the `ImpersonateNamedPipeClient` function to assume the access token of the user connected to the client end of the pipe. For example, a name pipe server can provide access to a database of file system to which the pipe server has privileged access to. When a pipe client sends a request to the server, the server impersonates the client and attempts to access the protected database. The system then grants/denies the server's access, _based on the security level of the client_. Once this operation has been completed, the server can use the `ReverToSelf` function to restore its original security token.
 
 ### Examples
 

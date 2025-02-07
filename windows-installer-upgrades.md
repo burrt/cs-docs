@@ -1,12 +1,12 @@
 # Windows Installer Upgrades
 
-* [Versioning](#versioning)
-* [Upgrades Overview](#upgrades-overview)
-* [Major upgrades](#major-upgrades)
-  * [Upgrade Conditions](#upgrade-conditions)
-  * [WiX MajorUpgrade Element](#wix-majorupgrade-element)
-* [Minor upgrades](#minor-upgrades)
-* [Small upgrades](#small-updates)
+* [Versioning](windows-installer-upgrades.md#versioning)
+* [Upgrades Overview](windows-installer-upgrades.md#upgrades-overview)
+* [Major upgrades](windows-installer-upgrades.md#major-upgrades)
+  * [Upgrade Conditions](windows-installer-upgrades.md#upgrade-conditions)
+  * [WiX MajorUpgrade Element](windows-installer-upgrades.md#wix-majorupgrade-element)
+* [Minor upgrades](windows-installer-upgrades.md#minor-upgrades)
+* [Small upgrades](windows-installer-upgrades.md#small-updates)
 
 ## Overview
 
@@ -25,7 +25,7 @@ This is a huge topic and I am no expert on this. There are many articles floatin
 The standard version convention is:
 
 | Major | . | Minor | . | Build | . | Revision |
-|-------|---|-------|---|-------|---|----------|
+| ----- | - | ----- | - | ----- | - | -------- |
 | 8bit  | . | 8bit  | . | 16bit | . | 16bit    |
 | 255   | . | 255   | . | 65535 | . | 65535    |
 
@@ -36,7 +36,7 @@ It is common for versioning to deviate and where the `build` and `revision` are 
 What is changes are required for upgrades:
 
 | Upgrade type  | Package code | Product version | Product code | Upgrade code |
-|---------------|--------------|-----------------|--------------|--------------|
+| ------------- | ------------ | --------------- | ------------ | ------------ |
 | Small Update  | X            |                 |              |              |
 | Minor Upgrade | X            | X               |              |              |
 | Major Upgrade | X            | X               | X            |              |
@@ -47,7 +47,7 @@ The WiX package code is an auto-generated GUID that changes on each build unless
 
 > Note that you always have to change the Package GUID when you create a new `.msi` file that is different from the previous ones in any respect. The Installer keeps track of your installed programs and finds them when the user wants to change or remove the installation using these GUIDs.
 >
->Using the same GUID for different packages will confuse the Installer.
+> Using the same GUID for different packages will confuse the Installer.
 
 ## Upgrade checks
 
@@ -92,7 +92,7 @@ You then need to create some custom actions and modify the `InstallExecuteSequen
 * During a major upgrade using Windows Installer, the installer searches the user's computer for applications that are related to the pending upgrade, and when it detects one, it retrieves the version of the installed application from the system registry.
 * The installer then uses information in the upgrade database to determine whether to upgrade the installed application.
 
-This is generally recommended by most people including the WiX developers - there's even built-in support to make major upgrades much easier to deal with. Although there is a *cost* involved, there is far less undefined or unexpected behavior.
+This is generally recommended by most people including the WiX developers - there's even built-in support to make major upgrades much easier to deal with. Although there is a _cost_ involved, there is far less undefined or unexpected behavior.
 
 ### Steps for major upgrades
 
@@ -124,13 +124,13 @@ Remember, a **major upgrade** consists of two parts: uninstalling the old produc
 
 You might want to be aware of these important MSI properties:
 
-1. `UPGRADINGPRODUCTCODE` - see [MS Docs](https://msdn.microsoft.com/en-us/library/windows/desktop/aa372380(v=vs.85).aspx)
-    * Set during uninstall of *old* product
+1. `UPGRADINGPRODUCTCODE` - see [MS Docs](https://msdn.microsoft.com/en-us/library/windows/desktop/aa372380\(v=vs.85\).aspx)
+   * Set during uninstall of _old_ product
 2. `WIX_UPGRADE_DETECTED` - see [WiX Docs](http://wixtoolset.org/documentation/manual/v3/xsd/wix/majorupgrade.html)
-    * Set during install of *new* product for an upgrade
+   * Set during install of _new_ product for an upgrade
 
 | Installation Type | MSI Condition                                |
-|-------------------|----------------------------------------------|
+| ----------------- | -------------------------------------------- |
 | Major Upgrade     | `WIX_UPGRADE_DETECTED`                       |
 | Clean install     | `NOT Installed AND NOT WIX_UPGRADE_DETECTED` |
 | Uninstall         | `REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE`  |
@@ -141,11 +141,11 @@ The WiX `MajorUpgrade` element allows the re-scheduling of the `RemoveExistingPr
 
 See [MajorUpgrade/@Schedule](https://wixtoolset.org/documentation/manual/v3/xsd/wix/majorupgrade.html):
 
->`afterInstallInitialize`
+> `afterInstallInitialize`
 >
->Schedules `RemoveExistingProducts` after the `InstallInitialize` standard action. This is similar to the `afterInstallValidate` scheduling, but if the installation of the upgrade product fails, Windows Installer also rolls back the removal of the installed product -- in other words, reinstalls it.
+> Schedules `RemoveExistingProducts` after the `InstallInitialize` standard action. This is similar to the `afterInstallValidate` scheduling, but if the installation of the upgrade product fails, Windows Installer also rolls back the removal of the installed product -- in other words, reinstalls it.
 >
->i.e. if the new product version fails (and rolls-back its changes) - the old product version remains on the machine.
+> i.e. if the new product version fails (and rolls-back its changes) - the old product version remains on the machine.
 
 ## Minor Upgrades
 
@@ -154,9 +154,9 @@ See [MajorUpgrade/@Schedule](https://wixtoolset.org/documentation/manual/v3/xsd/
 * A typical minor upgrade includes all fixes in previous small updates combined into a patch.
 * A minor upgrade is also commonly referred to as a service pack (SP) update.
 
->If you want to ship updates as MSP's (Small Update or Minor Upgrade in Microsoft terminology) **don't** use auto-generated GUIDs.
+> If you want to ship updates as MSP's (Small Update or Minor Upgrade in Microsoft terminology) **don't** use auto-generated GUIDs.
 >
->If you're only ever going to ship updates as MSI's (Major Upgrades) you need to change the Product Code every time anyway so auto-generating is fine.
+> If you're only ever going to ship updates as MSI's (Major Upgrades) you need to change the Product Code every time anyway so auto-generating is fine.
 
 Minor upgrades are generally **not** recommended and many people have encountered issues - e.g. [mixing minor and major upgrades](https://wix.ronifuchs.com/tag/minor-upgrade/). There is a trade-off of [cost](http://www.joyofsetup.com/2008/12/30/paying-for-upgrades/) (reinstalling a product may take a long time), complexity and size.
 
@@ -168,9 +168,9 @@ The steps for a minor upgrade:
 2. Increment the `ProductVersion` - preferably keep it to minor
 3. Verify the upgrade/downgrade conditions are met
 4. After building the installer, you cannot run it as per usual, you **must** invoke it with the following flags
-    * `msiexec /i Installer_Upgrade_v1_1.msi REINSTALL=ALL REINSTALLMODE=vomus /lv*x log.txt`
-    * See [REINSTALLMODE flags](https://msdn.microsoft.com/en-us/library/windows/desktop/aa371182(v=vs.85).aspx)
-    * The command line requirement for a minor upgrade is not very user-friendly. WiX recommends wrapping it with a Bootstrapper `.exe` or an `Autorun.inf`.
+   * `msiexec /i Installer_Upgrade_v1_1.msi REINSTALL=ALL REINSTALLMODE=vomus /lv*x log.txt`
+   * See [REINSTALLMODE flags](https://msdn.microsoft.com/en-us/library/windows/desktop/aa371182\(v=vs.85\).aspx)
+   * The command line requirement for a minor upgrade is not very user-friendly. WiX recommends wrapping it with a Bootstrapper `.exe` or an `Autorun.inf`.
 
 The [WiX Toolset docs](https://www.firegiant.com/wix/tutorial/upgrades-and-modularization/checking-for-oldies/) provides some basic steps for a minor upgrades but it doesn't dive into some finer details which may cause problems later on.
 
@@ -191,13 +191,13 @@ Consider the following scenario:
 * `v1_1.msi` is re-installed (minor upgrade)
   * File `foo.txt` (v1.2) remains unchanged
 
-Yeah, brain explosion. Minor upgrades will *only update and create new files* - you cannot remove files. A small summary that I wish I saw earlier or if it were in the docs:
+Yeah, brain explosion. Minor upgrades will _only update and create new files_ - you cannot remove files. A small summary that I wish I saw earlier or if it were in the docs:
 
->Maintenance mode installations are **not** intended for "installations".
+> Maintenance mode installations are **not** intended for "installations".
 >
->They are intended to allow installing and/or removing features from already installed products, for applying updates to products (such as patches/hotfixes/etc.), and for removing products (including the removal phase of major upgrades when `RemoveExistingProducts` removes "old" products).
+> They are intended to allow installing and/or removing features from already installed products, for applying updates to products (such as patches/hotfixes/etc.), and for removing products (including the removal phase of major upgrades when `RemoveExistingProducts` removes "old" products).
 >
->Things go weird when files are removed from your product. Windows Installer doesn't let you remove components in a minor upgrade, so using one file per component doesn't immediately solve the automation problem: Your automatically-generated minor upgrade will be missing a component, which is a [mortal component-rule sin](http://blogs.msdn.com/heaths/archive/2006/01/23/516457.aspx).
+> Things go weird when files are removed from your product. Windows Installer doesn't let you remove components in a minor upgrade, so using one file per component doesn't immediately solve the automation problem: Your automatically-generated minor upgrade will be missing a component, which is a [mortal component-rule sin](http://blogs.msdn.com/heaths/archive/2006/01/23/516457.aspx).
 
 Read more here - [paying for upgrades](http://www.joyofsetup.com/2008/12/30/paying-for-upgrades/).
 
@@ -208,4 +208,4 @@ Read more here - [paying for upgrades](http://www.joyofsetup.com/2008/12/30/payi
 * A small update does **not** permit reorganization of the feature-component tree.
 * A typical small update changes only one or two files or a registry key. Because a small update changes the information in the .msi file, the installation package code must be changed.
 
->If you want to ship updates as MSP's (Small Update or Minor Upgrade in Microsoft terminology) don't use auto-generated GUIDs.
+> If you want to ship updates as MSP's (Small Update or Minor Upgrade in Microsoft terminology) don't use auto-generated GUIDs.

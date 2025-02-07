@@ -4,20 +4,20 @@ The main source of information can be found at the [Microsoft Documentation: Ide
 
 ## Contents
 
-* [Security Identifier](#security-identifier)
-* [User Accounts](#user-accounts)
-* [Service Accounts](#service-accounts)
-* [Authentication](#authentication)
-  * [NTLM](#ntlm)
-  * [Kerberos](#kerberos)
+* [Security Identifier](windows-sec-id-mgmt.md#security-identifier)
+* [User Accounts](windows-sec-id-mgmt.md#user-accounts)
+* [Service Accounts](windows-sec-id-mgmt.md#service-accounts)
+* [Authentication](windows-sec-id-mgmt.md#authentication)
+  * [NTLM](windows-sec-id-mgmt.md#ntlm)
+  * [Kerberos](windows-sec-id-mgmt.md#kerberos)
 
 ## Terms
 
 | Simple objects     | Explanation                                                                                                                                |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Security Principle | Users or groups and are represented as a Security Identifier (SID)                                                                         |
 | Resource           | Has an owner - default will be the user who created it                                                                                     |
-| Rights             | Assigned to *user* accounts and authorizes users to perform specific actions e.g. interactive sign-on, file backup                         |
+| Rights             | Assigned to _user_ accounts and authorizes users to perform specific actions e.g. interactive sign-on, file backup                         |
 | Permissions        | Are associated with objects                                                                                                                |
 | Objects            | Are files/folders/printers/registry keys, AD DS Objects etc.                                                                               |
 | Container          | Can contain other objects and can also inherit permissions                                                                                 |
@@ -57,7 +57,7 @@ A security token that is created every time a user sign-ins. It contains:
 
 It is the security context for whatever actions the user performs on that computer.
 
-```text
+```
 User sign-in -> Authenticated -> SID - Other         -> LSA generates an Access token (primary)
                                      - User/groups
                                      - Old? SIDs
@@ -66,7 +66,7 @@ User sign-in -> Authenticated -> SID - Other         -> LSA generates an Access 
 A copy of the primary token is coped and attached to any thread/process that executes on the user's behalf.
 
 * **Primary token**: describes the security context of the user associated with the process
-* **Impersonation token**: enables a thread to run in a security context **differs** from the security context of the process that *owns* the thread
+* **Impersonation token**: enables a thread to run in a security context **differs** from the security context of the process that _owns_ the thread
 
 ### Security Identifier
 
@@ -77,7 +77,7 @@ A SID is used to uniquely identify a security principle or group. There are two 
 
 #### SID structure
 
-```text
+```
 +-----------------------------------+
 |SubAuthorityCount|Reserved|Revision|
 +-----------------------------------+
@@ -90,20 +90,20 @@ A SID is used to uniquely identify a security principle or group. There are two 
 +-----------------------------------+
 ```
 
-##### Identifier Authority
+**Identifier Authority**
 
 Highest level of authority that can issue SIDs for that type of security principal. For example:
 
 * For the `Everyone` group -> `World Authority`
 * For the specific Windows Server account -> `NT Authority`
 
-##### SubAuthorities
+**SubAuthorities**
 
 These are most important; they collectively identify a domain in enterprise. The RID identifies the account/user relative to the domain - if the domain changes, it will also change.
 
-##### String representation
+**String representation**
 
-```text
+```
 S - R - X - Y1 - Y2 ... Yn - 1 - Yn
 
 S: Indicates the string is a SID
@@ -133,7 +133,7 @@ It is a data structure that's associates with each securable object. It contains
 
 Structure:
 
-```text
+```
 ACLS - DACL
      - SACL
 ```
@@ -169,7 +169,7 @@ They are stored locally on the server.
 
 * Admin account and part of the **Administrators** group
 * For OS sign-in, Windows Installers etc.
-* Can use the *Administrator user account* to perform Administrator tasks
+* Can use the _Administrator user account_ to perform Administrator tasks
 
 #### User Access Control (UAC)
 
@@ -194,7 +194,7 @@ They are user accounts create explicitly to provide a **security context** for s
 
 ### Standalone Managed Service Accounts
 
-Designed to isolate domain accounts in crucial applications and eliminates the need for Administrators to manually administer the [SPN](#spn) and credentials for the accounts.
+Designed to isolate domain accounts in crucial applications and eliminates the need for Administrators to manually administer the [SPN](windows-sec-id-mgmt.md#spn) and credentials for the accounts.
 
 * This service account can only manage **one** server - but it can manage multiple services on that server.
 * The network passwords are automatically reset
@@ -210,9 +210,9 @@ A client no longer needs to remember what service it needs to connect to; it onl
 
 They are managed local accounts that are automatically managed, can access the network in a domain environment and **no** password management.
 
-Services run as virtual accounts access network resources using the *credentials of the computer account* in the format:
+Services run as virtual accounts access network resources using the _credentials of the computer account_ in the format:
 
-```text
+```
 <domain_name>\<computer_name>$
 
 LAB\SOME_SERVER$
@@ -244,30 +244,28 @@ NTLM credentials are based on data obtained during the interactive logon process
 2. user name
 3. one-way hash of user's password
 
-##### Interactive NTLM authentication
+**Interactive NTLM authentication**
 
 Interactive NTLM authentication over a network typically involves two systems: a **client system**, where the user is requesting authentication, and a **domain controller**, where information related to the user's password is kept.
 
-##### Non-interactive NTLM authentication
+**Non-interactive NTLM authentication**
 
 Non-interactive authentication, which may be required to permit an **already logged-on user** to access a resource such as a server application, typically involves three systems: a **client**, a **server**, and a **domain controller** that does the authentication calculations on behalf of the server.
 
-1. *Interactive authentication only* - A user accesses a client computer and provides a domain name, user name and password. The client computes a cryptographic hash of the password and discards the actual password.
+1. _Interactive authentication only_ - A user accesses a client computer and provides a domain name, user name and password. The client computes a cryptographic hash of the password and discards the actual password.
 2. The client sends the user name to the server (in plaintext).
 3. The server generates a 16-byte random number, called a challenge or nonce, and sends it to the client.
 4. The client encrypts this challenge with the hash of the user's password and returns the result to the server. This is called the response.
 5. The server sends the following three items to the domain controller:
-
-    * User name
-    * Challenge sent to the client
-    * Response received from the client
-
+   * User name
+   * Challenge sent to the client
+   * Response received from the client
 6. The domain controller uses the user name to retrieve the hash of the user's password from the Security Account Manager database. It uses this password hash to encrypt the challenge.
 7. The domain controller compares the encrypted challenge it computed (in step 6) to the response computed by the client (in step 4). If they are identical, authentication is successful.
 
 #### Kerberos
 
-##### SPN
+**SPN**
 
 A service principal name (SPN) is a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. This allows a client application to request that the service authenticate an account even if the client does not have the account name.
 

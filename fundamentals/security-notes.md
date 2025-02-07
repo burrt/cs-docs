@@ -1,7 +1,7 @@
 # Security Notes
 
-* [Common FAQs](#common-faqs)
-* [One time passwords](#one-time-passwords)
+* [Common FAQs](security-notes.md#common-faqs)
+* [One time passwords](security-notes.md#one-time-passwords)
 
 ## Resources
 
@@ -15,11 +15,11 @@
 
 Taken from [OWASP - Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html):
 
->Hashing and encryption both provide ways to keep sensitive data safe. However, in almost all circumstances, passwords should be hashed, **NOT** encrypted.
+> Hashing and encryption both provide ways to keep sensitive data safe. However, in almost all circumstances, passwords should be hashed, **NOT** encrypted.
 >
->**Hashing is a one-way function** (i.e., it is impossible to "decrypt" a hash and obtain the original plaintext value). Hashing is appropriate for password validation. Even if an attacker obtains the hashed password, they cannot enter it into an application's password field and log in as the victim.
+> **Hashing is a one-way function** (i.e., it is impossible to "decrypt" a hash and obtain the original plaintext value). Hashing is appropriate for password validation. Even if an attacker obtains the hashed password, they cannot enter it into an application's password field and log in as the victim.
 >
->**Encryption is a two-way function**, meaning that the original plaintext can be retrieved. Encryption is appropriate for storing data such as a user's address since this data is displayed in plaintext on the user's profile. Hashing their address would result in a garbled mess.
+> **Encryption is a two-way function**, meaning that the original plaintext can be retrieved. Encryption is appropriate for storing data such as a user's address since this data is displayed in plaintext on the user's profile. Hashing their address would result in a garbled mess.
 
 ### What hashing algorithm should I use for passwords?
 
@@ -56,8 +56,7 @@ Very useful blogs:
 
 ### TOTP
 
-> Time-based One-time Password Algorithm is an algorithm that computes a one-time password from a shared secret key and the current time.
-[Wikipedia](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm)
+> Time-based One-time Password Algorithm is an algorithm that computes a one-time password from a shared secret key and the current time. [Wikipedia](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm)
 
 Also see [RFC 6238](https://tools.ietf.org/html/rfc6238)
 
@@ -71,7 +70,7 @@ TOTP is based on HOTP with a timestamp replacing the incrementing counter.
 
 For example:
 
-```text
+```
 TC = floor((unixtime(now) − unixtime(T0)) / TI)
 TOTP = HOTP(SecretKey, TC)
 TOTP-Value = TOTP mod 10d  // where d is the desired number of digits of the one-time password.
@@ -91,8 +90,8 @@ Although `RFC 6238` allows different parameters to be used, the Google implement
 Once the parameters are agreed upon, **token generation** is as follows:
 
 * calculate `C` as the number of times `TI` has elapsed after `T0`.
-* compute the HMAC hash `H` with `C` as the *message* and `K` as the key.
-* `K` should be passed as it is, `C` should be passed as a *raw 64-bit unsigned integer*.
+* compute the HMAC hash `H` with `C` as the _message_ and `K` as the key.
+* `K` should be passed as it is, `C` should be passed as a _raw 64-bit unsigned integer_.
 * take the least 4 significant bits of `H` and use it as an offset, `O`.
 * take 4 bytes from `H` starting at O bytes MSB, **discard** the most significant bit and store the rest as an (unsigned) 32-bit integer, `I`.
 * the token is the lowest `N` digits of `I` in base 10.
@@ -102,7 +101,7 @@ Now:
 
 * both the server and the client compute the token
 * then the server checks if the token supplied by the client matches the locally generated token
-* some servers allow codes that should have been generated **before or after the current time** in order to account for slight *clock skews, network latency and user delays*
+* some servers allow codes that should have been generated **before or after the current time** in order to account for slight _clock skews, network latency and user delays_
 
 ### HTOP
 
@@ -120,14 +119,14 @@ HOTP is an HMAC-based one-time password (OTP) algorithm. See [Wikipedia](https:/
 
 Then `HOTP(K, C)` is mathematically defined by:
 
-```text
+```
 HOTP(K, C) = Truncate(HMAC(K, C)) & 0x7FFFFFFF
 ```
 
 The mask `0x7FFFFFFF` sets the result's MSB to zero. This avoids problems if the result is interpreted as a signed number as some processors do.
 
-*For HOTP to be useful for an individual to input to a system, the result must be converted into a `HOTP` value, a 6–8 digits number that is implementation dependent.*
+_For HOTP to be useful for an individual to input to a system, the result must be converted into a `HOTP` value, a 6–8 digits number that is implementation dependent._
 
-```text
+```
 HOTP-Value = HOTP(K, C) mod 10d  // where d is the desired number of digits
 ```

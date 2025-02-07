@@ -1,36 +1,36 @@
-# Windows Installer  WiX Bootstrapper Notes
+# Windows Installer WiX Bootstrapper Notes
 
-* [Bootstrapper command line switches](#bootstrapper-command-line-switches)
-* [Logging](#logging)
-* [Adding packages to the Bootstrapper](#adding-packages-to-the-bootstrapper)
-* [Customizing the built-in Bootstrapper UI](#customizing-the-built-in-bootstrapper-ui)
-* [Signing the Bootstrapper](#signing-the-bootstrapper)
-* [Tips](#tips)
+* [Bootstrapper command line switches](windows-installer-burn.md#bootstrapper-command-line-switches)
+* [Logging](windows-installer-burn.md#logging)
+* [Adding packages to the Bootstrapper](windows-installer-burn.md#adding-packages-to-the-bootstrapper)
+* [Customizing the built-in Bootstrapper UI](windows-installer-burn.md#customizing-the-built-in-bootstrapper-ui)
+* [Signing the Bootstrapper](windows-installer-burn.md#signing-the-bootstrapper)
+* [Tips](windows-installer-burn.md#tips)
 
 ## Overview
 
 From the [WiX Bundle documentation](https://wixtoolset.org/documentation/manual/v3/bundle/):
 
->A bundle is a collection of installation packages that are chained together in a single user experience. Bundles are often used to install prerequisites, such as the .NET Framework or Visual C++ runtime, before an application's .MSI file. Bundles also allow very large applications or suites of applications to be broken into smaller, logical installation packages while still presenting a single product to the end-user.
+> A bundle is a collection of installation packages that are chained together in a single user experience. Bundles are often used to install prerequisites, such as the .NET Framework or Visual C++ runtime, before an application's .MSI file. Bundles also allow very large applications or suites of applications to be broken into smaller, logical installation packages while still presenting a single product to the end-user.
 >
->To create a seamless setup experience across multiple installation packages, the WiX toolset provides an engine (often referred to as a bootstrapper or chainer) named Burn. The Burn engine is an executable that hosts a DLL called the "bootstrapper application". The bootstrapper application DLL is responsible for displaying UI to the end-user and directs the Burn engine when to carry out download, install, repair and uninstall actions. Most developers will not need to interact directly with the Burn engine because the WiX toolset provides a standard bootstrapper application and the language necessary to create bundles.
+> To create a seamless setup experience across multiple installation packages, the WiX toolset provides an engine (often referred to as a bootstrapper or chainer) named Burn. The Burn engine is an executable that hosts a DLL called the "bootstrapper application". The bootstrapper application DLL is responsible for displaying UI to the end-user and directs the Burn engine when to carry out download, install, repair and uninstall actions. Most developers will not need to interact directly with the Burn engine because the WiX toolset provides a standard bootstrapper application and the language necessary to create bundles.
 >
->Creating bundles with the WiX toolset is directly analogous to creating Windows Installer packages (.MSI files) using the language and standard UI extension provided by the WiX toolset.
+> Creating bundles with the WiX toolset is directly analogous to creating Windows Installer packages (.MSI files) using the language and standard UI extension provided by the WiX toolset.
 
 ## Bootstrapper command line switches
 
-| Switch                    | Description                                                                                  |
-|---------------------------|----------------------------------------------------------------------------------------------|
-| `-q, -quiet, -s, -silent` | silent install                                                                               |
-| `-passive`                | progress bar only install                                                                    |
-| `-norestart`              | suppress any restarts                                                                        |
-| `-forcerestart`           | restart no matter what (I don't know why this is still  around)                              |
-| `-promptrestart`          | prompt if a restart is required (default)                                                    |
-| `-layout`                 | create a local image of the bootstrapper (i.e. download files so  they can be burned to DVD) |
-| `-l, -log`                | log to a specific file (default is controlled by bundle developer)                           |
-| `-uninstall`              | uninstall                                                                                    |
-| `-repair`                 | repair (or install if not installed)                                                         |
-| `-package, -update`       | install (default if no `-uninstall` or `-repair`)                                            |
+| Switch                    | Description                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| `-q, -quiet, -s, -silent` | silent install                                                                              |
+| `-passive`                | progress bar only install                                                                   |
+| `-norestart`              | suppress any restarts                                                                       |
+| `-forcerestart`           | restart no matter what (I don't know why this is still around)                              |
+| `-promptrestart`          | prompt if a restart is required (default)                                                   |
+| `-layout`                 | create a local image of the bootstrapper (i.e. download files so they can be burned to DVD) |
+| `-l, -log`                | log to a specific file (default is controlled by bundle developer)                          |
+| `-uninstall`              | uninstall                                                                                   |
+| `-repair`                 | repair (or install if not installed)                                                        |
+| `-package, -update`       | install (default if no `-uninstall` or `-repair`)                                           |
 
 ### Defining your own switches
 
@@ -69,7 +69,7 @@ Then in your `Bundle.wxs`:
 
 The bootstrapper will by default generate the logs for each `MsiPackage` you define in your bundle chain. If you use the logging switch (`-l -log`) and define the logging file name, the logs will be populated in the directory where it was invoked.
 
-If the logging switch was not defined on the command line, the installation logs will reside in `C:\Users\%username%\AppData\Local\Temp` (this is Burn built-in variable value of `$(var.TempFolder)` and on Windows, corresponds to the environment variable `%TEMP%`). If performing multiple installs and uninstalls, the installation log files will be *overwritten*.
+If the logging switch was not defined on the command line, the installation logs will reside in `C:\Users\%username%\AppData\Local\Temp` (this is Burn built-in variable value of `$(var.TempFolder)` and on Windows, corresponds to the environment variable `%TEMP%`). If performing multiple installs and uninstalls, the installation log files will be _overwritten_.
 
 ### Customizing logging location
 
@@ -137,8 +137,7 @@ The Burn [RollbackBoundary](https://wixtoolset.org/documentation/manual/v3/xsd/w
 
 Let's consider an example:
 
-For your bundle, you have 3 packages in it in a chain
-These packages must succeed before proceeding to the next one
+For your bundle, you have 3 packages in it in a chain These packages must succeed before proceeding to the next one
 
 ```xml
 <Chain>
