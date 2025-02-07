@@ -1,20 +1,20 @@
 # Python Notes
 
-* [Basics](#basics)
-  * [Copy](#copy)
-  * [Loops](#for-loops)
-  * [Lists, generators etc.](#lists-generators-and-other-interesting-built-ins)
-    * [map, filter, reduce](#map-filter-reduce)
-  * [Dictionaries](#dictionaries)
-  * [Time](#time)
-  * [Logging](#logging)
-  * [File](#file)
-* [Time complexity](#time-complexity)
-* [Classes](#classes)
-* [Decorators](#decorators)
-* [Threading](#threading)
-* [Regex](#regex)
-* [Operator precedence](#operator-precedence)
+* [Basics](python-notes.md#basics)
+  * [Copy](python-notes.md#copy)
+  * [Loops](python-notes.md#for-loops)
+  * [Lists, generators etc.](python-notes.md#lists-generators-and-other-interesting-built-ins)
+    * [map, filter, reduce](python-notes.md#map-filter-reduce)
+  * [Dictionaries](python-notes.md#dictionaries)
+  * [Time](python-notes.md#time)
+  * [Logging](python-notes.md#logging)
+  * [File](python-notes.md#file)
+* [Time complexity](python-notes.md#time-complexity)
+* [Classes](python-notes.md#classes)
+* [Decorators](python-notes.md#decorators)
+* [Threading](python-notes.md#threading)
+* [Regex](python-notes.md#regex)
+* [Operator precedence](python-notes.md#operator-precedence)
 
 ## Links
 
@@ -236,8 +236,7 @@ for x, y in zip(num_list1, num_list2):
 
 ### Copy
 
-Assignment statements in Python **do not** copy objects, they create **bindings** between a target and an object.
-For collections that are **mutable or contain mutable items**, a copy is sometimes needed so one can change one copy without changing the other.
+Assignment statements in Python **do not** copy objects, they create **bindings** between a target and an object. For collections that are **mutable or contain mutable items**, a copy is sometimes needed so one can change one copy without changing the other.
 
 Basically:
 
@@ -412,7 +411,7 @@ logging.basicConfig(filename='logfile.log',
 File open modes
 
 | Char | Meaning                                                         | Further desc                                                                                                                                               |
-|------|-----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 'r'  | open for reading (default)                                      |                                                                                                                                                            |
 | 'w'  | open for writing, truncating the file first                     |                                                                                                                                                            |
 | 'x'  | open for exclusive creation, failing if the file already exists |                                                                                                                                                            |
@@ -431,9 +430,9 @@ For additional information for time complexity, see my [other page](https://gith
 ### list
 
 | Operation        | Average Case | Amortized Worst Case |
-|------------------|--------------|----------------------|
+| ---------------- | ------------ | -------------------- |
 | Copy             | `O(n)`       | `O(n)`               |
-| Append[1]        | `O(1)`       | `O(1)`               |
+| Append\[1]       | `O(1)`       | `O(1)`               |
 | Pop last         | `O(1)`       | `O(1)`               |
 | Pop intermediate | `O(k)`       | `O(k)`               |
 | Insert           | `O(n)`       | `O(n)`               |
@@ -444,7 +443,7 @@ For additional information for time complexity, see my [other page](https://gith
 | Get Slice        | `O(k)`       | `O(k)`               |
 | Del Slice        | `O(n)`       | `O(n)`               |
 | Set Slice        | `O(k+n)`     | `O(k+n)`             |
-| Extend[1]        | `O(k)`       | `O(k)`               |
+| Extend\[1]       | `O(k)`       | `O(k)`               |
 | Sort             | `O(n log n)` | `O(n log n)`         |
 | Multiply         | `O(nk)`      | `O(nk)`              |
 | x in s           | `O(n)`       |                      |
@@ -454,7 +453,7 @@ For additional information for time complexity, see my [other page](https://gith
 ### collections.deque
 
 | Operation  | Average Case | Amortized Worst Case |
-|------------|--------------|----------------------|
+| ---------- | ------------ | -------------------- |
 | copy       | `O(n)`       | `O(n)`               |
 | append     | `O(1)`       | `O(1)`               |
 | appendleft | `O(1)`       | `O(1)`               |
@@ -467,7 +466,7 @@ For additional information for time complexity, see my [other page](https://gith
 ### set
 
 | Operation                           | Average Case            | Amortized Worst Case                            | Notes                                      |
-|-------------------------------------|-------------------------|-------------------------------------------------|--------------------------------------------|
+| ----------------------------------- | ----------------------- | ----------------------------------------------- | ------------------------------------------ |
 | x in s                              | `O(1)`                  | `O(n)`                                          |                                            |
 | Union `s\|t`                        | `O(len(s)+len(t))`      |                                                 |                                            |
 | Intersection `s&t`                  | `O(min(len(s), len(t))` | `O(len(s) * len(t))`                            | replace "min" with "max" if t is not a set |
@@ -476,17 +475,17 @@ For additional information for time complexity, see my [other page](https://gith
 
 ### dict
 
-| Operation    | Average Case | Amortized Worst Case |
-|--------------|--------------|----------------------|
-| Copy[2]      | O(n)         | O(n)                 |
-| Get Item     | O(1)         | O(n)                 |
-| Set Item[1]  | O(1)         | O(n)                 |
-| Delete Item  | O(1)         | O(n)                 |
-| Iteration[2] | O(n)         | O(n)                 |
+| Operation     | Average Case | Amortized Worst Case |
+| ------------- | ------------ | -------------------- |
+| Copy\[2]      | O(n)         | O(n)                 |
+| Get Item      | O(1)         | O(n)                 |
+| Set Item\[1]  | O(1)         | O(n)                 |
+| Delete Item   | O(1)         | O(n)                 |
+| Iteration\[2] | O(n)         | O(n)                 |
 
-[1] = These operations rely on the "Amortized" part of "Amortized Worst Case". Individual actions may take surprisingly long, depending on the history of the container.
+\[1] = These operations rely on the "Amortized" part of "Amortized Worst Case". Individual actions may take surprisingly long, depending on the history of the container.
 
-[2] = For these operations, the worst case `n` is the *maximum size* the container ever achieved, rather than just the current size. For example, if `N` objects are added to a dictionary, then `N-1` are deleted, the dictionary will still be sized for `N` objects (at least) until another insertion is made.
+\[2] = For these operations, the worst case `n` is the _maximum size_ the container ever achieved, rather than just the current size. For example, if `N` objects are added to a dictionary, then `N-1` are deleted, the dictionary will still be sized for `N` objects (at least) until another insertion is made.
 
 ## Classes
 
@@ -600,8 +599,7 @@ Remember that decorators return the wrapped function i.e. a modified version of 
 * as nested functions
 * with/without arguments
 
-Each method has a slightly different syntax that you should be aware of.
-Useful links:
+Each method has a slightly different syntax that you should be aware of. Useful links:
 
 * [Python 3 decorators - better example](https://python-3-patterns-idioms-test.readthedocs.io/en/latest/PythonDecorators.html)
 * [Python 3 decorators - quick examples](https://book.pythontips.com/en/latest/decorators.html)
@@ -732,19 +730,19 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
 
 ## Regex
 
-| Symbol       | Meaning                                                                                                                                                                                                                                                                            |
-|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `a, X, 9`    | Ordinary characters just match themselves exactly. The meta-characters which do not match themselves because they have special meanings are: `.` `^` `$` `*` `+` `?` `{` `[` `]` `\` `\|` `(` `)`                                                                                  |
-| `.`          | A period matches **any single character except** newline `\n`                                                                                                                                                                                                                      |
-| `\w`         | Matches a "word" character: a letter or digit or underbar `[a-zA-Z0-9_]`. Note that although "word" is the mnemonic for this, it only matches a single word char, not a whole word.                                                                                                |
-| `\W`         | Matches any non-word character.                                                                                                                                                                                                                                                    |
-| `\b`         | Boundary between word and non-word                                                                                                                                                                                                                                                 |
-| `\s`         | Matches a **single** whitespace character - space, newline, return, tab, form `[ \n\r\t\f]`.                                                                                                                                                                                       |
-| `\S`         | Matches any **non-whitespace** character.                                                                                                                                                                                                                                          |
-| `\t, \n, \r` | Tab, newline, return.                                                                                                                                                                                                                                                              |
-| `\d`         | Decimal digit `[0-9]` (some older regex utilities do not support but `\d`, but they all support `\w` and `\s`).                                                                                                                                                                    |
-| `^, $`       | Match the start or end of the string respectively.                                                                                                                                                                                                                                 |
-| `\`          | Inhibit the **specialness** of a character. <br>So, for example, use `\.` to match a period or `\\` to match a slash. If you are unsure if a character has special meaning, such as `@`, you can put a slash in front of it, `\@`, to make sure it is treated just as a character. |
+| Symbol     | Meaning                                                                                                                                                                                                                                                                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a, X, 9`  | Ordinary characters just match themselves exactly. The meta-characters which do not match themselves because they have special meanings are: `.` `^` `$` `*` `+` `?` `{` `[` `]` `\` `\|` `(` `)`                                                                                                                                                 |
+| `.`        | A period matches **any single character except** newline                                                                                                                                                                                                                                                                                          |
+| `\w`       | Matches a "word" character: a letter or digit or underbar `[a-zA-Z0-9_]`. Note that although "word" is the mnemonic for this, it only matches a single word char, not a whole word.                                                                                                                                                               |
+| `\W`       | Matches any non-word character.                                                                                                                                                                                                                                                                                                                   |
+| `\b`       | Boundary between word and non-word                                                                                                                                                                                                                                                                                                                |
+| `\s`       | Matches a **single** whitespace character - space, newline, return, tab, form `[ \n\r\t\f]`.                                                                                                                                                                                                                                                      |
+| `\S`       | Matches any **non-whitespace** character.                                                                                                                                                                                                                                                                                                         |
+| `\t, \n,`  | Tab, newline, return.                                                                                                                                                                                                                                                                                                                             |
+| `\d`       | Decimal digit `[0-9]` (some older regex utilities do not support but `\d`, but they all support `\w` and `\s`).                                                                                                                                                                                                                                   |
+| `^, $`     | Match the start or end of the string respectively.                                                                                                                                                                                                                                                                                                |
+| `\`        | <p>Inhibit the <strong>specialness</strong> of a character.<br>So, for example, use <code>\.</code> to match a period or <code>\\</code> to match a slash. If you are unsure if a character has special meaning, such as <code>@</code>, you can put a slash in front of it, <code>\@</code>, to make sure it is treated just as a character.</p> |
 
 ### match, search, findall
 
@@ -818,13 +816,8 @@ for tuple in tuples:
 ### Options
 
 * `IGNORECASE`: Ignore upper/lowercase differences for matching, so 'a' matches both 'a' and 'A'.
-
-* `DOTALL`: Allow dot (.) to match newline -- normally it matches anything **but** newline.
-This can trip you up - you think `.*` matches everything, but by default it does **not** go past the end of a line.
-Note that `\s` (whitespace) includes newlines, so if you want to **match a run of whitespace that may include a newline**, you can just use `\s*`
-
-* `MULTILINE`:Within a string made of many lines, allow `^` and `$` to match the start and end of each line.
-Normally `^/$` would just match the start and end of the whole string.
+* `DOTALL`: Allow dot (.) to match newline -- normally it matches anything **but** newline. This can trip you up - you think `.*` matches everything, but by default it does **not** go past the end of a line. Note that `\s` (whitespace) includes newlines, so if you want to **match a run of whitespace that may include a newline**, you can just use `\s*`
+* `MULTILINE`:Within a string made of many lines, allow `^` and `$` to match the start and end of each line. Normally `^/$` would just match the start and end of the whole string.
 
 ```python
 # for search()` or `findall()` etc.
@@ -833,18 +826,18 @@ re.search(pattern, str, re.IGNORECASE)
 
 ## Operator precedence
 
-| Operator                                      | Description                                                                    |
-|-----------------------------------------------|--------------------------------------------------------------------------------|
-| `**`                                          | Exponentiation (raise to the power)                                            |
-| `~` `+` `-`                                   | Complement, unary plus and minus (method names for the last two are +@ and -@) |
-| `*` `/` `%` `//`                              | Multiply, divide, modulo and floor division                                    |
-| `+` `-`                                       | Addition and subtraction                                                       |
-| `>>` `<<`                                     | Right and left bitwise shift                                                   |
-| `&`                                           | Bitwise AND                                                                    |
-| `^` `\|`                                      | Bitwise exclusive 'OR' and regular 'OR'                                        |
-| `<=` `<` `>` `>=`                             | Comparison operators                                                           |
-| `<>` `==` `!=`                                | Equality operators                                                             |
-| `=` `%=` `/=` <br> `//=` `-=` `+=` `*=` `**=` | Assignment operators                                                           |
-| `is` `is not`                                 | Identity operators                                                             |
-| `in` `not in`                                 | Membership operators                                                           |
-| `not` `or` `and`                              | Logical operators                                                              |
+| Operator                                                                                                                                   | Description                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `**`                                                                                                                                       | Exponentiation (raise to the power)                                            |
+| `~` `+` `-`                                                                                                                                | Complement, unary plus and minus (method names for the last two are +@ and -@) |
+| `*` `/` `%` `//`                                                                                                                           | Multiply, divide, modulo and floor division                                    |
+| `+` `-`                                                                                                                                    | Addition and subtraction                                                       |
+| `>>` `<<`                                                                                                                                  | Right and left bitwise shift                                                   |
+| `&`                                                                                                                                        | Bitwise AND                                                                    |
+| `^` `\|`                                                                                                                                   | Bitwise exclusive 'OR' and regular 'OR'                                        |
+| `<=` `<` `>` `>=`                                                                                                                          | Comparison operators                                                           |
+| `<>` `==` `!=`                                                                                                                             | Equality operators                                                             |
+| <p><code>=</code> <code>%=</code> <code>/=</code><br><code>//=</code> <code>-=</code> <code>+=</code> <code>*=</code> <code>**=</code></p> | Assignment operators                                                           |
+| `is` `is not`                                                                                                                              | Identity operators                                                             |
+| `in` `not in`                                                                                                                              | Membership operators                                                           |
+| `not` `or` `and`                                                                                                                           | Logical operators                                                              |

@@ -1,17 +1,17 @@
 # Windows Installer Notes
 
-* [Resources](#resources)
-* [WiX and Windows Installers](wix-and-windows-installers)
-  * [Components](#components)
-  * [Custom Actions](#custom-actions)
-  * [Windows Service](#windows-service)
-  * [Drivers](#drivers)
-  * [Signing the Installer](#signing-the-installer)
-  * [WiX Heat Tool](#wix-heat)
-  * [Installer Upgrades](#installer-upgrades)
-  * [Burn Engine and WiX Bootstrapper](#burn-engine-and-wix-bootstrapper)
-* [Tips you don't want to miss](#tips)
-  * [Suggested Installer layout](#suggested-installer-layout)
+* [Resources](windows-installer.md#resources)
+* [WiX and Windows Installers](../wix-and-windows-installers/)
+  * [Components](windows-installer.md#components)
+  * [Custom Actions](windows-installer.md#custom-actions)
+  * [Windows Service](windows-installer.md#windows-service)
+  * [Drivers](windows-installer.md#drivers)
+  * [Signing the Installer](windows-installer.md#signing-the-installer)
+  * [WiX Heat Tool](windows-installer.md#wix-heat)
+  * [Installer Upgrades](windows-installer.md#installer-upgrades)
+  * [Burn Engine and WiX Bootstrapper](windows-installer.md#burn-engine-and-wix-bootstrapper)
+* [Tips you don't want to miss](windows-installer.md#tips)
+  * [Suggested Installer layout](windows-installer.md#suggested-installer-layout)
 
 ## Overview
 
@@ -19,12 +19,11 @@ Surprisingly, Windows Installers still exist today and there remains an abundanc
 
 [Wikipedia](https://en.wikipedia.org/wiki/Windows_Installer) summarizes the format of the Windows Installer Package `.msi` but I'll repeat it here for completion sake.
 
->* A Windows Installer package is made up of one or more full **products** and is universally identified by a GUID.
-A product is a single, installed, working program (or a set of programs)
->* A **package** includes the package logic and other metadata that relates to how the package executes when running.
->* A **feature** is a hierarchical group of components. It be contain any number of components and other sub-features. You can see this on the feature selection dialog that sometimes presents itself during an installation.
->* A **component** is a basic unit of a product, they are threaded as a unit and are installed atomically. These can be program files, folders, COM, registry keys and shortcuts. They are identified by a GUID and can be shared among several features.
->* A key path is a specific file, registry key or ODBC data source that the package author specifies as critical for a given component.
+> * A Windows Installer package is made up of one or more full **products** and is universally identified by a GUID. A product is a single, installed, working program (or a set of programs)
+> * A **package** includes the package logic and other metadata that relates to how the package executes when running.
+> * A **feature** is a hierarchical group of components. It be contain any number of components and other sub-features. You can see this on the feature selection dialog that sometimes presents itself during an installation.
+> * A **component** is a basic unit of a product, they are threaded as a unit and are installed atomically. These can be program files, folders, COM, registry keys and shortcuts. They are identified by a GUID and can be shared among several features.
+> * A key path is a specific file, registry key or ODBC data source that the package author specifies as critical for a given component.
 >   * When an msi-based program is launched, Windows Installer checks the existence of key paths. If there is a mismatch between the current system state and the value specified in the MSI package (e.g., a key file is missing), the related feature is re-installed. This process is known as self-healing or self-repair. No two components should use the same key path.
 
 These notes will be very focused on building Windows Installers using the WiX Toolset.
@@ -34,7 +33,7 @@ These notes will be very focused on building Windows Installers using the WiX To
 A collection of very useful links:
 
 * [WiX Toolset](https://wixtoolset.org/) - includes VS extension, docs, built-in dialogs etc.
-* [Stackoverflow: WiX Tips and Tricks](https://stackoverflow.com/questions/471424/wix-tricks-and-tips) - don't take everything as being the *correct* way
+* [Stackoverflow: WiX Tips and Tricks](https://stackoverflow.com/questions/471424/wix-tricks-and-tips) - don't take everything as being the _correct_ way
 * [MS Docs: Windows Installer](https://docs.microsoft.com/en-us/windows/desktop/Msi/windows-installer-portal) - once again, be careful about recommendations
 * [MS Docs: Windows Installer standard command line options](https://docs.microsoft.com/en-us/windows/desktop/Msi/standard-installer-command-line-options)
 * [A Real-world example of a Windows Installer](https://helgeklein.com/blog/2014/09/real-world-example-wix-msi-application-installer/#product_en-us-wxl) - very useful but not all parts are relevant and there is room for improvements
@@ -73,12 +72,12 @@ Despite shift in the industry to move away from Windows Installers, it is still 
 
 * In Visual Studio, it doesn't support the `AnyCPU` build configuration
   * This is due to the Registry x86/x64 locations
-* WiX v3 is maintained and stable, v4 is *still* under development and is not documented
+* WiX v3 is maintained and stable, v4 is _still_ under development and is not documented
 * WiX v3 does **not** support .NET Core
 
 ### Components
 
-This is the smallest atomic unit of a Windows Installer. Be sure to read [Devil in the details](#devil-in-the-details).
+This is the smallest atomic unit of a Windows Installer. Be sure to read [Devil in the details](windows-installer.md#devil-in-the-details).
 
 Tips:
 
@@ -91,21 +90,19 @@ Tips:
 
 There are a few key difference you need to be aware of, this [Stackoverflow](https://stackoverflow.com/questions/6827931/is-it-possible-to-pass-variable-to-wix-localization-file) post best explains it:
 
->There are different layers of variables in WiX:
+> There are different layers of variables in WiX:
 >
->* Candle's pre-processor variables
->* Light's WixVariables/localization variables/binder variables
->* MSI's properties
+> * Candle's pre-processor variables
+> * Light's WixVariables/localization variables/binder variables
+> * MSI's properties
 >
->Each have different syntax and are evaluated at different times:
+> Each have different syntax and are evaluated at different times:
 >
->Candle's preprocessor variables "`$(var.VariableName)`" are evaluated when candle runs, and can be set from candle's command line and from "" statements. Build-time environment properties as well as custom variables can also be accessed similarly (changing the "`var.`" prefix with other values).
->Light's variables accessible from the command-line are the `WixVariables`, and accessing them is via the "`!(wix.>VariableName)`" syntax. To access your variable from your command line, you would need to change your String to: "This build was prepared on `!(wix.BuildMachine)`"
->If you instead need to have the `BuildMachine` value exist as an MSI property at installation time (which is the "`[VariableName]`" syntax) you would need to add the following to one of your `.wxs` files in a fragment that is already linked in:
+> Candle's preprocessor variables "`$(var.VariableName)`" are evaluated when candle runs, and can be set from candle's command line and from "" statements. Build-time environment properties as well as custom variables can also be accessed similarly (changing the "`var.`" prefix with other values). Light's variables accessible from the command-line are the `WixVariables`, and accessing them is via the "`!(wix.>VariableName)`" syntax. To access your variable from your command line, you would need to change your String to: "This build was prepared on `!(wix.BuildMachine)`" If you instead need to have the `BuildMachine` value exist as an MSI property at installation time (which is the "`[VariableName]`" syntax) you would need to add the following to one of your `.wxs` files in a fragment that is already linked in:
 >
->Now, the environment variable `COMPUTERNAME` always has held the name of my build machines in the past, and you can access that this way: `$(env.COMPUTERNAME)`. So, you can get rid of the command line addition to light.exe and change your wxs file like this:
+> Now, the environment variable `COMPUTERNAME` always has held the name of my build machines in the past, and you can access that this way: `$(env.COMPUTERNAME)`. So, you can get rid of the command line addition to light.exe and change your wxs file like this:
 >
->`<WixVariable Id="BuildMachine" Value="$(env.COMPUTERNAME)"/>`
+> `<WixVariable Id="BuildMachine" Value="$(env.COMPUTERNAME)"/>`
 
 ### Registry search
 
@@ -136,8 +133,7 @@ WiX supports writing Custom Actions in C# targeting the .NET Framework. You shou
 * `commit` - indicates that the custom action will run after successful completion of the installation script (at the end of the installation)
 * `deferred` - for elevated privileges and for running in the deferred execute stage. If any system state is changed, apply the reverse in the rollback.
 * `firstSequence`
-* `immediate` - (default) with user privileges or impersonates the installing user, it has read-write access to properties. Does **not** change system state.
-oncePerProcess
+* `immediate` - (default) with user privileges or impersonates the installing user, it has read-write access to properties. Does **not** change system state. oncePerProcess
 * `rollback` - for rolling back a (deferred) custom action
 * `secondSequence` - indicates that a custom action should be run a second time if it was previously run in an earlier sequence
 
@@ -336,9 +332,9 @@ WiX supports the managements of Windows Services which is really helpful, partic
 
 For Windows Vista and later, service SIDs based on the service name allowed authorization of resources to a specific service instead of the build-in identity it runs under e.g. LocalService. The [MS Docs on using Service SIDs](https://docs.microsoft.com/en-us/sql/relational-databases/security/using-service-sids-to-grant-permissions-to-services-in-sql-server?view=sql-server-ver15) is important to read.
 
-Unfortunately WiX doesn't support the restrictions of ACLs to service SIDs - the closes is the [WiX PermissionEx Util Extension](http://wixtoolset.org/documentation/manual/v3/xsd/util/permissionex.html) which can update ACLs on `File`, `Registry`, `CreateFolder` and `ServiceInstall`. Information seems scarce but something from [Stackoverflow](https://stackoverflow.com/questions/49543312/how-to-deny-folder-permission-to-users-with-wix-installer) seems to require some knowledge in [SDDL](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379567%28v=vs.85%29.aspx) (shudder).
+Unfortunately WiX doesn't support the restrictions of ACLs to service SIDs - the closes is the [WiX PermissionEx Util Extension](http://wixtoolset.org/documentation/manual/v3/xsd/util/permissionex.html) which can update ACLs on `File`, `Registry`, `CreateFolder` and `ServiceInstall`. Information seems scarce but something from [Stackoverflow](https://stackoverflow.com/questions/49543312/how-to-deny-folder-permission-to-users-with-wix-installer) seems to require some knowledge in [SDDL](https://msdn.microsoft.com/en-us/library/windows/desktop/aa379567\(v=vs.85\).aspx) (shudder).
 
-##### C# Custom Actions to modify ACLs
+**C# Custom Actions to modify ACLs**
 
 Much easier to modify ACLs at the expense of burying the details in the CA and a direct coupling that is easy to forget.
 
@@ -412,11 +408,11 @@ There doesn't seem to be too much information around this as the WiX DIFx extens
 
 If in your driver.inf to copy driver.sys to `System32\Drivers` instead, specifying the `difx:Driver/@DeleteFiles="yes"` will not remove any copied files.
 
->Note  Starting with Windows 7, the DIFxApp configuration flag to remove installed files, together with the `DriverDeleteFiles` attribute, are ignored by the operating system. Binary files, which were copied to a system when a driver package was installed, can no longer be deleted by using DIFxApp. [MS Docs](https://technet.microsoft.com/en-us/ff549843%28v=vs.96%29)
+> Note Starting with Windows 7, the DIFxApp configuration flag to remove installed files, together with the `DriverDeleteFiles` attribute, are ignored by the operating system. Binary files, which were copied to a system when a driver package was installed, can no longer be deleted by using DIFxApp. [MS Docs](https://technet.microsoft.com/en-us/ff549843\(v=vs.96\))
 
 #### Driver execution sequence
 
-There wasn't much about when the install/uninstall of the drivers scheduling in the `InstallExecuteSequence` - [MsiProcessDrivers](https://technet.microsoft.com/en-ca/ff546212(v=vs.90)#MsiUninstallDrivers) was exposed.
+There wasn't much about when the install/uninstall of the drivers scheduling in the `InstallExecuteSequence` - [MsiProcessDrivers](https://technet.microsoft.com/en-ca/ff546212\(v=vs.90\)#MsiUninstallDrivers) was exposed.
 
 Basically the `MsiProcessDrivers` custom action has the `MsiInstallDrivers` and `MsiUninstallDrivers` management inside it.
 
@@ -447,7 +443,7 @@ See also:
 * [Stackoverflow: deploy an inf based USB driver](https://stackoverflow.com/questions/1197514/how-do-i-use-wix-to-deploy-an-inf-based-usb-driver)
 * [Stackoverflow: deploy an inf based USB driver + start menu](https://stackoverflow.com/questions/45989646/how-do-i-use-wix-to-deploy-an-inf-based-usb-driver-plus-all-the-start-menu-short)
 * [Stackoverflow: driver issues with installation](https://stackoverflow.com/questions/51832177/wix-silent-install-unable-to-launch-built-in-exe-wix-v3)
-* [MS Docs: driver types in the INF](https://technet.microsoft.com/en-us/ff552334(v=vs.96))
+* [MS Docs: driver types in the INF](https://technet.microsoft.com/en-us/ff552334\(v=vs.96\))
 * [CodeProject: driver installation with WiX DPInst](https://www.codeproject.com/Articles/44191/Drivers-Installation-With-WiX)
 * [MS Docs: avoid reboot after driver installation](https://docs.microsoft.com/en-us/windows-hardware/drivers/install/avoiding-system-restarts-during-device-installations)
 * [MS Forums: issues with INF installation method](https://social.msdn.microsoft.com/Forums/windows/en-US/fdb0d369-fdf4-4551-93d2-c8e1dcff9362/recommended-official-way-how-to-install-signed-wfp-callout-drivers?forum=wfp)
@@ -535,11 +531,15 @@ I don't recommend this way as it is similar to Custom Actions; in the sense it h
 
 ### Installer Upgrades
 
-See [Windows Installer Upgrades]({{ site.baseurl }}{% link _v1/windows-installer-upgrades.md %}).
+See \[Windows Installer Upgrades]\(\{{ site.baseurl \}}
+
+).
 
 ### Burn Engine and WiX Bootstrapper
 
-See [WiX Burn Engine]({{ site.baseurl }}{% link _v1/windows-installer-burn.md %}).
+See \[WiX Burn Engine]\(\{{ site.baseurl \}}
+
+).
 
 ## Tips
 
@@ -633,7 +633,7 @@ There are duplicate files under `/Themes` and `/1033`, this is due to the defaul
 
 #### App Installer
 
-Localizing an Installer should be ready from the start, building it in later is a *nightmare*. In-fact, localizing an installer and integrating it into the CI/CD pipeline is very painful.
+Localizing an Installer should be ready from the start, building it in later is a _nightmare_. In-fact, localizing an installer and integrating it into the CI/CD pipeline is very painful.
 
 The `InstallFlowSequence.wxs` file contains the `InstallExecuteSequence` - moving this into its own file isn't recommended but for complex Installers (avoid anyway...) it makes it easier to determine what and when CAs are scheduled at.
 
