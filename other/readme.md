@@ -1,3 +1,0 @@
-# README
-
-Computer Science Docs

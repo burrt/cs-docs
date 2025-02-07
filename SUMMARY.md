@@ -27,7 +27,6 @@
 
 ## Other
 
-* [README](other/readme.md)
 * [ArchLinux Notes](other/archlinux-notes.md)
 * [Building a library in C](other/libraries-notes.md)
 * [Cool commands](other/cool-commands.md)
