@@ -1,8 +1,10 @@
 # Table of contents
 
+* [Home](README.md)
+
 ## Fundamentals
 
-* [Useful C#/.NET tools and libraries](README.md)
+* [Useful C#/.NET tools and libraries](fundamentals/useful-c-.net-tools-and-libraries.md)
 * [Database Notes](database-notes.md)
 * [Design Patterns](fundamentals/design-patterns.md)
 * [DevOps](devops.md)
