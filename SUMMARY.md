@@ -45,6 +45,7 @@
 * [The Pragmatic Programmer](other/the-pragmatic-programmer.md)
 * [The Three Laws of TDD](other/tdd.md)
 * [Operating Systems Notes](other/operating-systems-notes.md)
+* [Laptop Setup](other/laptop-setup.md)
 
 ## Windows
 
