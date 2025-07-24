@@ -52,7 +52,7 @@ From the [Azure article](https://azure.microsoft.com/en-au/overview/nosql-databa
 * Scales horizontally by sharding
 * Well optimised for **reads** due to key-value based design and it is designed for horizontal scaling
 * **Write** performance is very good due to weaker consistency
-* e.g. social media (storing likes, comments), real-time analytics (various sources like IoT, fast writes)
+* e.g. social media (storing likes, comments), real-time analytics (various sources like IoT, fast writes), CMS, Fraud Detection systems (big data, distributed)
 
 ### SQL
 
