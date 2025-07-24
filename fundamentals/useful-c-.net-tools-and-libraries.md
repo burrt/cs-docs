@@ -4,6 +4,7 @@ I think it would be useful to list a number of tools and libraries that I use wh
 
 * [AWS Lambda - .NET Console app](https://github.com/burrt/AwsLambdaDotnet)
 * [AWS Lambda - .NET Web Api](https://github.com/burrt/AwsLambdaDotnetWebApi)
+* [Shared services - Terraform](https://github.com/burrt/tf-shared-core-services)
 
 ## Logging
 
@@ -25,8 +26,7 @@ I think it would be useful to list a number of tools and libraries that I use wh
 
 ### Swagger/Open API
 
-* [Swashbuckle - getting started](https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle)
-* [Swashbuckle GitHub](https://github.com/domaindrivendev/Swashbuckle.AspNetCore/tree/master)
+* .NET 9+ uses OpenAPI libraries for Swagger
 
 ## Database
 
@@ -34,9 +34,9 @@ Sometimes ORM (e.g. EF) isn't necessary, for mysql, the [MySqlConnector](https:/
 
 ## Testing
 
-* [xUnit](https://github.com/xunit/xunit)
+* [xUnit](https://github.com/xunit/xunit)/NUnit
 * [Moq](https://github.com/devlooped/moq)
-* [Specflow](https://github.com/SpecFlowOSS/SpecFlow)
+* [Specflow](https://github.com/SpecFlowOSS/SpecFlow) - deprecated
 
 ## Static code analysis
 
