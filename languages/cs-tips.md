@@ -23,9 +23,9 @@ Useful for unit testing for mocks or even for method signatures that require a d
 
 > **Is class overloading and overriding at compile time and/or run-time?**
 
-Class *overloading* is at (static) compile time as the compiler is aware of what method is invoked and what parameter types are set up.
+Class _overloading_ is at (static) compile time as the compiler is aware of what method is invoked and what parameter types are set up.
 
-Class *overriding* is at run-time and is an example of dynamic polymorphism. An example is when a method has an interface object as a parameter and the IoC container will resolve the implementing class at run-time. Thus the implementing method's behavior could change.
+Class _overriding_ is at run-time and is an example of dynamic polymorphism. An example is when a method has an interface object as a parameter and the IoC container will resolve the implementing class at run-time. Thus the implementing method's behavior could change.
 
 > **What is `IQueryable` used for?**
 
@@ -43,7 +43,17 @@ The `async` keyword enables methods to be executed asynchronously with the `awai
 
 The `await` keyword yields control back to the caller - async in .NET can be coined as "Blocking Method, Non-blocking Caller."
 
-Read more on best-practices here - [Async guidance](https://github.com/davidfowl/AspNetCoreDiagnosticScenarios/blob/master/AsyncGuidance.md)
+Example: `await GetDataFromApiAsync().ConfigureAwait(false)`
+
+* Use in library code where you don't care to resume on the original context
+* Do **not** use it in UI WinForms
+
+> How can I call an async method synchronously?
+
+It's generally said to **never** do this but sometimes you need to.
+
+* `Task.Run(async () => await GetDataAsync().ConfigureAwait(false)).GetAwaiter().GetResult();`
+  * Offloads to the thread pool, avoids deadlock
 
 > **What is the benefit of an asynchronous API controller if the clients/requests are all made asynchronously?**
 
