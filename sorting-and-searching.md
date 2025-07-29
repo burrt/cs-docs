@@ -6,6 +6,7 @@
   * [Uniformed searches](sorting-and-searching.md#uninformed-searches)
   * [Informed searches](sorting-and-searching.md#informed-searches)
   * [Heuristics](sorting-and-searching.md#heuristics)
+*
 
 ## Definitions
 
@@ -301,3 +302,25 @@ function heuristic(node) =
 ### Breaking ties
 
 Basically when the search needs to decide upon two or more paths to search but they are both **equal** cost, we can introduce a bias in the path cost algorithm. This may break a heuristic being admissible - read the link for further explanation.
+
+## Useful Math
+
+Powers of 2
+
+|      |                   |       |
+| ---- | ----------------- | ----- |
+| 2^0  | 1                 | 1byte |
+| 2^4  | 16                |       |
+| 2^8  | 256               |       |
+| 2^10 | 1 028             | 1KB   |
+| 2^20 | 1 048 576         | 1MB   |
+| 2^30 | 1 073 741 824     | 1GB   |
+| 2^40 | 1 099 511 627 776 | 1TB   |
+
+Sum of an arithmetic series:
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+Sum of an geometric series:
+
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>

@@ -2,27 +2,27 @@
 
 ## Methods of caching in hardware
 
-1. [Direct Mapped](#direct-mapped)
-2. [Fully Associative](#fully-associative)
-3. [N-way Set Associative](#n-way-set-associative-cache)
+1. [Direct Mapped](hardware-caching.md#direct-mapped)
+2. [Fully Associative](hardware-caching.md#fully-associative)
+3. [N-way Set Associative](hardware-caching.md#n-way-set-associative-cache)
 
 ## Basics
 
 * Caches are configured in lines/blocks - contiguous memory
 * Size of cache tag and data depends on its configuration
-  * eg. [Block size] = Exploiting spatial/temporal locality? Miss rate? Latency?
+  * eg. \[Block size] = Exploiting spatial/temporal locality? Miss rate? Latency?
   * Spatial = similar addresses, temporal = same block (time)
 * Structure of cache depends on the type of cache, block size etc.
 
 ## Direct Mapped
 
-For a 2<sup>N</sup> byte cache and 32 bit memory byte address and 2<sup>M</sup> byte block size:
+For a 2N byte cache and 32 bit memory byte address and 2M byte block size:
 
 * (32 - N) bits = cache tag (MSB)
 * M bits = byte select
 * (N - M) bits = index select
 
-```text
+```
 Memory Address:
           32                 (32-N) (N-M)                M
           +------------------------+--------------------+--------+
@@ -41,7 +41,7 @@ Index 1 : | V | Tag                    | Index   | Byte 2^M | .. |
 
 * **Tag** = compare high bits with content of the cache
 * **Index** = look at index of cache and compare tag with cache tag
-* **Offset** = if block size  1 byte (...), index into cache data section
+* **Offset** = if block size 1 byte (...), index into cache data section
 
 ### Pros + Cons of direct mapped
 
@@ -55,10 +55,10 @@ Index 1 : | V | Tag                    | Index   | Byte 2^M | .. |
 * N = 10
 * M = 5
 * tag size = 22 bits
-* index size =  5 bits
+* index size = 5 bits
 * offset size = 5 bits (size 32 bytes = 2^5)
 
-```text
+```
 Memory Address:
           32                     10 9                  5 4       0
           +------------------------+--------------------+--------+
@@ -74,7 +74,7 @@ Memory Address:
   * High comparator cost
 * -High cost of replacement policies to implement
 
-```text
+```
 Memory Address:
           32                                             M
           +---------------------------------------------+--------+

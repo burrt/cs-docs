@@ -1,11 +1,11 @@
 # C Notes
 
-* [Basics](#basics)
-  * [printf](#printf)
-  * [static](#static)
-  * [enum](#enum)
-* [Stack & heap](#stack-and-heap)
-* [Operator precedence](#operator-precedence)
+* [Basics](c-notes.md#basics)
+  * [printf](c-notes.md#printf)
+  * [static](c-notes.md#static)
+  * [enum](c-notes.md#enum)
+* [Stack & heap](c-notes.md#stack-and-heap)
+* [Operator precedence](c-notes.md#operator-precedence)
 
 ## Style guide
 
@@ -50,7 +50,7 @@ int x = (true)
 * `%4f`: print as a floating point with a width of at least 4 wide.
 * `%.4f`: print as a floating point with a precision of four characters after the decimal point.
 * `%3.2f`: print as a floating point at least 3 wide and a precision of 2.
-* `%.10s`:  prints the string, but print only 10 characters of the string.
+* `%.10s`: prints the string, but print only 10 characters of the string.
 * `%-10s`: prints the string, but prints at least 10 characters. If the string is smaller “whitespace” is added at the end.
 
 ### static
@@ -151,45 +151,45 @@ int k = i++;  // k == 11
 
 ## Operator precedence
 
-| Precedence | Operator            | Description                                               | Associativity |
-|------------|---------------------|-----------------------------------------------------------|---------------|
-| 2          | `a++` `a--`         | Suffix/postfix increment and decrement                    | Left-Right    |
-|            | `type()` `type{}`   | Functional cast                                           |               |
-|            | `a()`               | Function call                                             |               |
-|            | `a[]`               | Subscript                                                 |               |
-|            | `.` `->`            | Member access                                             |               |
-| 3          | `++a` `--a`         | Prefix increment and decrement                            | Right-to-left |
-|            | `+a` `-a`           | Unary plus and minus                                      |               |
-|            | `!` `~`             | Logical NOT and bitwise NOT                               |               |
-|            | `(type)`            | C-style cast                                              |               |
-|            | `*a`                | Indirection (dereference)                                 |               |
-|            | `&a`                | Address-of                                                |               |
-|            | `sizeof`            | Size-of<sup>**1**</sup>                                   |               |
-|            | `new` `new[]`       | Dynamic memory allocation                                 |               |
-|            | `delete` `delete[]` | Dynamic memory deallocation                               |               |
-| 4          | `.*` `->*`          | Pointer-to-member                                         | Left-to-right |
-| 5          | `a*b` `a/b` `a%b`   | Multiplication, division, and remainder                   |               |
-| 6          | `a+b` `a-b`         | Addition and subtraction                                  |               |
-| 7          | `<<` `>>`           | Bitwise left shift and right shift                        |               |
-| 8          | `<` `<=`            | For relational operators `<` and `≤` respectively         |               |
-|            | `>` `>=`            | For relational operators `>` and `≥` respectively         |               |
-| 9          | `==` `!=`           | For relational operators `=` and `≠` respectively         |               |
-| 10         | `a&b`               | Bitwise AND                                               |               |
-| 11         | `^`                 | Bitwise XOR (exclusive or)                                |               |
-| 12         | `|`                 | Bitwise OR (inclusive or)                                 |               |
-| 13         | `&&`                | Logical AND                                               |               |
-| 14         | `||`                | Logical OR                                                |               |
-| 15         | `a ? b : c`         | Ternary conditional<sup>**2**</sup>                       | Right-to-left |
-|            | `throw`             | throw operator                                            |               |
-|            | `=`                 | Direct assignment (provided by default for C++ classes)   |               |
-|            | `+=` `-=`           | Compound assignment by sum and difference                 |               |
-|            | `*=` `/=` `%=`      | Compound assignment by product, quotient, and remainder   |               |
-|            | `<<=` `>>=`         | Compound assignment by bitwise left shift and right shift |               |
-|            | `&=` `^=` `|=`      | Compound assignment by bitwise AND, XOR, and OR           |               |
-| 16         | `,`                 | Comma                                                     | Left-to-right |
+| Precedence | Operator            | Description                                               | Associativity                                   |
+| ---------- | ------------------- | --------------------------------------------------------- | ----------------------------------------------- |
+| 2          | `a++` `a--`         | Suffix/postfix increment and decrement                    | Left-Right                                      |
+|            | `type()` `type{}`   | Functional cast                                           |                                                 |
+|            | `a()`               | Function call                                             |                                                 |
+|            | `a[]`               | Subscript                                                 |                                                 |
+|            | `.` `->`            | Member access                                             |                                                 |
+| 3          | `++a` `--a`         | Prefix increment and decrement                            | Right-to-left                                   |
+|            | `+a` `-a`           | Unary plus and minus                                      |                                                 |
+|            | `!` `~`             | Logical NOT and bitwise NOT                               |                                                 |
+|            | `(type)`            | C-style cast                                              |                                                 |
+|            | `*a`                | Indirection (dereference)                                 |                                                 |
+|            | `&a`                | Address-of                                                |                                                 |
+|            | `sizeof`            | Size-of**1**                                              |                                                 |
+|            | `new` `new[]`       | Dynamic memory allocation                                 |                                                 |
+|            | `delete` `delete[]` | Dynamic memory deallocation                               |                                                 |
+| 4          | `.*` `->*`          | Pointer-to-member                                         | Left-to-right                                   |
+| 5          | `a*b` `a/b` `a%b`   | Multiplication, division, and remainder                   |                                                 |
+| 6          | `a+b` `a-b`         | Addition and subtraction                                  |                                                 |
+| 7          | `<<` `>>`           | Bitwise left shift and right shift                        |                                                 |
+| 8          | `<` `<=`            | For relational operators `<` and `≤` respectively         |                                                 |
+|            | `>` `>=`            | For relational operators `>` and `≥` respectively         |                                                 |
+| 9          | `==` `!=`           | For relational operators `=` and `≠` respectively         |                                                 |
+| 10         | `a&b`               | Bitwise AND                                               |                                                 |
+| 11         | `^`                 | Bitwise XOR (exclusive or)                                |                                                 |
+| 12         | \`                  | \`                                                        | Bitwise OR (inclusive or)                       |
+| 13         | `&&`                | Logical AND                                               |                                                 |
+| 14         | \`                  |                                                           | \`                                              |
+| 15         | `a ? b : c`         | Ternary conditional**2**                                  | Right-to-left                                   |
+|            | `throw`             | throw operator                                            |                                                 |
+|            | `=`                 | Direct assignment (provided by default for C++ classes)   |                                                 |
+|            | `+=` `-=`           | Compound assignment by sum and difference                 |                                                 |
+|            | `*=` `/=` `%=`      | Compound assignment by product, quotient, and remainder   |                                                 |
+|            | `<<=` `>>=`         | Compound assignment by bitwise left shift and right shift |                                                 |
+|            | `&=` `^=` \`        | =\`                                                       | Compound assignment by bitwise AND, XOR, and OR |
+| 16         | `,`                 | Comma                                                     | Left-to-right                                   |
 
-* **<sup>1</sup>**: The operand of `sizeof` can't be a C-style type cast: the expression `sizeof (int) * p` is unambiguously interpreted as `(sizeof(int)) * p`, but **not** `sizeof((int)*p)`.
-* **<sup>2</sup>**: The expression in the middle of the conditional operator (between ? and :) is parsed as if **parenthesized**: its precedence relative to `?:` is **ignored**.
+* **1**: The operand of `sizeof` can't be a C-style type cast: the expression `sizeof (int) * p` is unambiguously interpreted as `(sizeof(int)) * p`, but **not** `sizeof((int)*p)`.
+* **2**: The expression in the middle of the conditional operator (between ? and :) is parsed as if **parenthesized**: its precedence relative to `?:` is **ignored**.
 
 ### Associativity
 
@@ -197,8 +197,8 @@ Operators that have the same precedence are bound to their arguments in the dire
 
 For example the expressions:
 
-* `a = b = c` is parsed as `a = (b = c)` and **not** as `(a = b) = c` because of *right-to-left* associativity of assignment.
-* `a + b - c` is parsed as `(a + b) - c` and **not** as `a + (b - c)` because of *left-to-right* associativity of addition and subtraction.
+* `a = b = c` is parsed as `a = (b = c)` and **not** as `(a = b) = c` because of _right-to-left_ associativity of assignment.
+* `a + b - c` is parsed as `(a + b) - c` and **not** as `a + (b - c)` because of _left-to-right_ associativity of addition and subtraction.
 
 Associativity specification is redundant for unary operators and is only shown for completeness: unary prefix operators always associate right-to-left `(delete ++*p is delete(++(*p)))` and unary postfix operators always associate left-to-right `(a[1][2]++ is ((a[1])[2])++)`.
 
