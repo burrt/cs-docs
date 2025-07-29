@@ -6,7 +6,7 @@ I think it would be useful to list a number of tools and libraries that I use wh
 * [AWS Lambda - .NET Web Api](https://github.com/burrt/AwsLambdaDotnetWebApi)
 * [Shared services - Terraform](https://github.com/burrt/tf-shared-core-services)
 
-## Logging
+### Logging
 
 * [Serilog](https://github.com/serilog/serilog)
   * for json logs, it is particularly useful for logging services like AWS CloudWatch:
@@ -16,7 +16,17 @@ I think it would be useful to list a number of tools and libraries that I use wh
   * [Serilog.Enrichers.Sensitive](https://github.com/serilog-contrib/Serilog.Enrichers.Sensitive) - some protection against PII
   * [Destructurama.Attributed](https://github.com/destructurama/attributed) - a more powerful and flexible library, probably at a cost of runtime
 
-## HTTP
+### Design
+
+**MediatR** is a .NET library which implements the Mediator pattern using an in-process bus.
+
+* decouples request senders and receivers
+* enables CQRS with commands, queries, event notifications
+* example: ecommerce website
+  * order = command
+  * post order such as email, notifications = notification
+
+### HTTP
 
 * .NET's `HttpClient` is quite sufficient
 * [Polly](https://github.com/App-vNext/Polly) - HTTP Request retries
@@ -24,21 +34,21 @@ I think it would be useful to list a number of tools and libraries that I use wh
   * It does require a few tweaks with [ASP.NET Core HTTP logging](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-logging)
   * Refer to the above templates
 
-### Swagger/Open API
+#### Swagger/Open API
 
 * .NET 9+ uses OpenAPI libraries for Swagger
 
-## Database
+### Database
 
 Sometimes ORM (e.g. EF) isn't necessary, for mysql, the [MySqlConnector](https://github.com/mysql-net/MySqlConnector) seems quite handy.
 
-## Testing
+### Testing
 
 * [xUnit](https://github.com/xunit/xunit)/NUnit
 * [Moq](https://github.com/devlooped/moq)
-* [Specflow](https://github.com/SpecFlowOSS/SpecFlow) - deprecated
+* [Specflow](https://github.com/SpecFlowOSS/SpecFlow) - deprecated, Reqnroll now
 
-## Static code analysis
+### Static code analysis
 
 * SonarQube/Cloud - for code quality, coverage and security
 * Veracode - security
@@ -46,7 +56,7 @@ Sometimes ORM (e.g. EF) isn't necessary, for mysql, the [MySqlConnector](https:/
 * Dependabot - security
 * Snyk - security
 
-## Observability
+### Observability
 
 Microsoft has some new open source tools - [read here](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel)
 
