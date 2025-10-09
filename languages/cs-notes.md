@@ -4,41 +4,6 @@
 
 [MS C# Guide](https://docs.microsoft.com/en-us/dotnet/csharp/index)
 
-## Contents
-
-* [Terms](#terms)
-* [Types](#types)
-  * [Struct](#struct)
-  * [Enum](#enum)
-  * [Implicit types](#implicit-types)
-  * [Dynamic](#dynamic)
-* [Expressions](#expressions)
-  * [Lambda expressions](#lambda-expressions)
-* [Operators](#operators)
-* [Equality](#equality)
-* [Delegates](#delegates)
-* [Exceptions](#exceptions)
-* [Misc examples](#misc-examples)
-* [Classes](#classes)
-  * [Accessibility](#accessibility)
-  * [Parameters](#parameters)
-  * [Methods](#methods)
-  * [Abstract](#abstract)
-  * [Partial](#partial)
-  * [Property](#property)
-  * [Inheritance & Polymorphism](#inheritance-and-polymorphism)
-  * [Constructors](#constructors)
-* [Interfaces](#interfaces)
-* [Static](#static)
-* [Enumerating](#enumerating)
-* [Indexers](#indexers)
-* [Generics](#generics)
-* [LINQ](#linq)
-* [Namespaces](#namespaces)
-* [Null](#null)
-* [Async](#async)
-* [Floating Point](#floating-point)
-
 ## Terms
 
 ### Variance
@@ -57,112 +22,7 @@ Contravariance allows interface methods to have argument types that are less der
 
 A generic interface that has covariant or contravariant generic type parameters is called variant.
 
-## Types
-
-### Value types
-
-* Simple:
-  * `sbyte`, `short`, `int`, `long`
-  * `byte`, `ushort`, `uint`, `ulong`
-  * `char` - UTF-16
-  * `float`, `double`
-  * `decimal` - high precision
-  * `bool`
-* Enum types
-  * User-defined types of the form `enum E {...}`
-* Struct types
-  * User-defined types of the form `struct S {...}`
-* Nullable value types
-  * Extensions of all other value types with a `null` value
-
-### Reference types
-
-* Class types
-  * Ultimate base class of all other types: `object`
-  * Unicode strings: `string` - UTF-16
-  * User-defined types of the form `class C {...}`
-* Interface types
-  * User-defined types of the form `interface I {...}`
-* Array types
-  * Single and multi-dimensional, for example, `int[]` and `int[,]`
-* Delegate types
-  * User-defined types of the form delegate `int D(...)`
-
-### Struct
-
-* They are **value** types - pass by value to methods hence field changes don't persist
-* Can implement interfaces, can be used as a nullable type and assigned `null`
-* Does not support `protected` since it cannot inherit classes etc.
-* Fields can't be initialized on declaration unless `static` or `const`
-* Generally less expensive than classes and used for small objects/entities
-
-```cs
-public struct CoOrds
-{
-    public int x, y;
-    // You can't have an empty constructor, all fields must be initialized
-    public CoOrds(int p1, int p2)
-    {
-        x = p1;
-        y = p2;
-    }
-}
-
-CoOrds point = new CoOrds();
-// You can omit the new keyword since structs are value types
-// All fields must be initialized before using
-CoOrds point = new CoOrds(1, 1);
-CoOrds point;
-point.x = 1;
-point.y = 1;
-```
-
-Remember that you can override the `ToString()` method since everything inherits `object`.
-
-### Enum
-
-They are converted to numeric literals at compile time hence if you refer to enums or constants from external sources, this may cause potential issues.
-They can be of the following types: `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long`, or `ulong`.
-
-```cs
-enum Day : byte {Sat=1, Sun, Mon, Tue, Wed, Thu, Fri};
-int y = (int)Day.Fri;  // Explicit cast is necessary
-
-enum Range : long { Max = 2147483648L, Min = 255L };
-```
-
-You can do more interesting things to print the string value and combinations of enums with [System.FlagsAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.flagsattribute?view=netframework-4.7.2).
-
-### Implicit types
-
-* Make the compiler infer the type from the RHS expression using `var`
-* Can only be used when a local variable is declared and initialized in the same statement; the variable cannot be initialized to null, or to a method group or an anonymous function
-* Cannot be used on fields at class scope
-
-```cs
-// a is compiled as int[]
-var a = new[] { 0, 1, 2 };
-
-// anon is compiled as an anonymous type
-var anon = new { Name = "Terry", Age = 34 };
-anon.Name;
-
-foreach(var item in list) {...}
-
-// More interesting with LINQ
-var words = new[] { "aPPLE", "BlUeBeRrY", "cHeRry" };
-var upperLowerWords =
-    from w in words
-    select new { Upper = w.ToUpper(), Lower = w.ToLower() };
-
-// Execute the query
-foreach (var ul in upperLowerWords)
-{
-    Console.WriteLine("Uppercase: {0}, Lowercase: {1}", ul.Upper, ul.Lower);
-}
-```
-
-### Boxing
+#### Boxing
 
 Boxing is the process of converting a value type to the type `object` or to any interface type implemented by this value type. When the CLR boxes a value type, it wraps the value inside a `System.Object` and stores it on the managed **heap**. Unboxing extracts the value type from the object. Boxing is implicit; unboxing is explicit. This comes at a large performance cost at runtime.
 
@@ -222,29 +82,6 @@ public class Container
 }
 ```
 
-## Expressions
-
-[More here](https://docs.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/expressions).
-
-Some interesting ones:
-
-* `new T(...)`: Object and delegate creation
-* `new T(...){...}`: Object creation with initializer
-* `new {...}`: Anonymous object initializer
-* `new T[...]`: Array creation
-* `typeof(T)`: Obtain Type object for T
-* `checked(x)`: Evaluate expression in checked context
-* `unchecked(x)`: Evaluate expression in unchecked context
-* `default(T)`: Obtain default value of type T
-* `delegate {...}`: Anonymous function (anonymous method)
-* `x is T`: Return `true` if `x` is a `T`, `false` otherwise
-  * Checks for inheritance of objects - e.g. downcasting isn't valid unless polymorphism
-* `x as T`: Return `x` typed as `T`, or `null` if `x` is not a `T`
-  * Same as casting but doesn't throw an exception if invalid, returns `null` instead
-* `x ?? y`: Evaluates to `y` if `x` is `null`, to `x` otherwise
-* `x ? y : z`: Evaluates `y` if `x` is `true`, `z` if `x` is `false`
-* `(T x) => y`: Anonymous function (lambda expression)
-
 ### Lambda expressions
 
 A horrible way to do nothing:
@@ -297,12 +134,7 @@ Customer first = customers?[0];  // null if customers is null
 int? count = customers?[0]?.Orders?.Count();  // null if customers, the first customer, or Orders is null
 ```
 
-### Ternary operator
 
-```cs
-condition ? first_expression : second_expression;  // right-associative
-int x = (1 == 1) ? 2 : 3;
-```
 
 ### Bit operations
 
@@ -353,7 +185,7 @@ However, sometimes you want to have a custom definition of equality for your **v
 
 1. Implement the interface `System.IEquatable<T>` which provides **type-specific** equality!
 2. Override the virtual method of `Object.Equals(Object)` - **no** type safety here
-    * This usually just calls your type-specific implementation
+   * This usually just calls your type-specific implementation
 3. Implement the `==` and `!=` operator methods (call type-specific equality)
 4. Implement `GetHashCode()` method
 
@@ -414,52 +246,7 @@ public CheckIfEqual(object o1, object o2)
 * Use `StringComparison.Ordinal` or `StringComparison.OrdinalIgnoreCase` for comparisons as your safe default for culture-agnostic string matching.
 * Use comparisons with `StringComparison.Ordinal` or `StringComparison.OrdinalIgnoreCase` for better performance.
 * Use the non-linguistic `StringComparison.Ordinal` or `StringComparison.OrdinalIgnoreCase` values instead of string operations based on `CultureInfo.InvariantCulture` when the comparison is linguistically irrelevant (symbolic, for example).
-* Do **not** use string operations based on StringComparison.InvariantCulture in most cases. One of the few exceptions is when you are persisting linguistically meaningful but culturally agnostic data.
-
-## Delegates
-
-* These are basically function pointer equivalent
-
-```cs
-// declare this is in some namespace
-public delegate int DelegateName(int firstArg, int secondArg);
-
-// now you can instantiate the delegate function in some constructor for example
-public class bar
-{
-    DelegateName FunctionPtr;
-    public bar()
-    {
-        FunctionPtr = new DelegateName(foo);
-        // alternatively you can do this?
-        // FunctionPtr = foo;
-        // we can call/(de)attach multiple delegates
-        //   - can no longer reset FunctionPtr
-        // FunctionPtr += foo2
-        // FunctionPtr -= foo2
-    }
-
-    // here's a function
-    public int foo(int x, y)
-    {
-        return x + y;
-    }
-
-    // now we can run the delegate in a property for example
-    private int _sum = 0;
-    public int PropertyNameSum
-    {
-        get
-        {
-            return _sum;
-        }
-        set
-        {
-            _sum = FunctionPtr(0, value);
-        }
-    }
-}
-```
+* Do **not** use string operations based on `StringComparison.InvariantCulture` in most cases. One of the few exceptions is when you are persisting linguistically meaningful but culturally agnostic data.
 
 ### Func
 
@@ -586,7 +373,7 @@ catch (Exception ex) when (ex is InvalidOperation || ex is NullPointerException)
 
 ### Creating your own exceptions
 
-It's important to implement all constructors when creating your exception. The [MS Docs](#https://docs.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) have a bit more information you can read as well.
+It's important to implement all constructors when creating your exception. The [MS Docs](cs-notes.md#https://docs.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) have a bit more information you can read as well.
 
 ```cs
 [Serializable]
@@ -849,12 +636,12 @@ Remember that `static` methods **cannot** access instance methods while instance
 
 * Virtual
   * `virtual` modifier
-  * *run-time* type of instance is determines the actual method implementation
+  * _run-time_ type of instance is determines the actual method implementation
   * these methods **can** be modified in a derived class
   * you **cannot** use these modifiers with virtual methods: `static`, `abstract`, `override`
 * Non-virtual
   * default method types
-  * *compile-time* type of instance is determines the actual method implementation
+  * _compile-time_ type of instance is determines the actual method implementation
 * Abstract
   * they are `virtual` methods with **no** implementation and can only belong in an `abstract` class
   * they **must** be overridden in a non-abstract derived class
@@ -941,9 +728,7 @@ public class F : E
 
 ### Partial
 
-You can split class implementations using `partial` but they must be in the same `namespace`.
-Good thing namespaces can be split across multiple files as well.
-It is also applicable to `struct` and `interface` which is a bit more relevant.
+You can split class implementations using `partial` but they must be in the same `namespace`. Good thing namespaces can be split across multiple files as well. It is also applicable to `struct` and `interface` which is a bit more relevant.
 
 ```cs
 // Foo.cs
@@ -1313,7 +1098,7 @@ Generics at run time are actually optimized so there is instance reuse for refer
 
 It's important to know that you can use either **query expression** and **method-based query** for the same result. However, some queries must be method-based so it is important that you are familiar with both options. You can also use `var` to let the compiler infer types however it is generally better to explicitly define types for clarity.
 
-Queries can also return anonymous types e.g. `... select new { name =  cust.Name, phone = cut.Phone};`, here the use of `var` is imperative.
+Queries can also return anonymous types e.g. `... select new { name = cust.Name, phone = cut.Phone};`, here the use of `var` is imperative.
 
 ```cs
 int[] numbers = { 5, 10, 8, 3, 6, 12};
@@ -1364,8 +1149,7 @@ See also [Stack Overflow - Any vs Count](https://stackoverflow.com/questions/305
 * They organize large code projects.
 * They are delimited by using the `.` operator.
 * The `using directive` obviates the requirement to specify the name of the namespace for every class.
-* The `global` namespace is the "root" namespace: `global::System` will always refer to the .NET Framework namespace
-`System`.
+* The `global` namespace is the "root" namespace: `global::System` will always refer to the .NET Framework namespace `System`.
 * If there is any ambiguity if you import two namespaces with name collisions, you will get a compile error.
 
 ```cs
@@ -1495,7 +1279,7 @@ Make sure to yield control back to the main thread!
 
 ### IO Bound
 
-You **don't** want a new thread or queue an IO bound task to the `Threadpool` because  a **new thread** dedicated to just wait for return request is costly when the thread could be doing more meaningful work!
+You **don't** want a new thread or queue an IO bound task to the `Threadpool` because a **new thread** dedicated to just wait for return request is costly when the thread could be doing more meaningful work!
 
 What you want is to **delegate** the work to the OS which in turn delegates the work asynchronously - this is important so that when your HTTP request finally responds - it is bubbled back to the caller via interrupts and in a non-blocking fashion.
 
@@ -1537,10 +1321,10 @@ public async Task<int> Prime95()
 Common confusions between:
 
 * `float`/`single`: 32 bit - float is an alias to single
-  * Approximately ±1.5e-45 to ±3.4e38 with ~6-9 significant figures
+  * Approximately ±1.5e-45 to ±3.4e38 with \~6-9 significant figures
 * `double`: 64 bit
   * For very large numbers where losing precision is acceptable e.g. very large scientific values
-  * Approximately ±5.0e-324 to ±1.7e308 with ~15-17 significant figures
+  * Approximately ±5.0e-324 to ±1.7e308 with \~15-17 significant figures
 * `decimal`: 128 bit
   * Use for money
   * Smaller range of values, performance cost, stored as base 10
