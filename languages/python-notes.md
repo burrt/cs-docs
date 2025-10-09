@@ -1,21 +1,5 @@
 # Python Notes
 
-* [Basics](python-notes.md#basics)
-  * [Copy](python-notes.md#copy)
-  * [Loops](python-notes.md#for-loops)
-  * [Lists, generators etc.](python-notes.md#lists-generators-and-other-interesting-built-ins)
-    * [map, filter, reduce](python-notes.md#map-filter-reduce)
-  * [Dictionaries](python-notes.md#dictionaries)
-  * [Time](python-notes.md#time)
-  * [Logging](python-notes.md#logging)
-  * [File](python-notes.md#file)
-* [Time complexity](python-notes.md#time-complexity)
-* [Classes](python-notes.md#classes)
-* [Decorators](python-notes.md#decorators)
-* [Threading](python-notes.md#threading)
-* [Regex](python-notes.md#regex)
-* [Operator precedence](python-notes.md#operator-precedence)
-
 ## Links
 
 * [Google Dev Python](https://developers.google.com/edu/python/)
@@ -348,42 +332,6 @@ dict.pop(key)
 dict.clear()
 ```
 
-### Time
-
-* There's a lot of things you can do with it - just refer to the docs everytime..
-  * [datetime](https://docs.python.org/3/library/datetime.html)
-  * [time](https://docs.python.org/3/library/time.html)
-  * [pytz](https://pypi.python.org/pypi/pytz) - for timezone conversions
-
-```python
-import datetime
-import time
-
-# getting current date time with milliseconds
-# remember: datetime isn't time locale aware!
-curr_local_datetime = datetime.datetime.now()  # local time
-curr_utc_datetime = datetime.datetime.utcnow()  # utc time
-
-# getting current epoch time
-time.time()  # seconds by default (float)
-cur_utc_epoch = datetime.utcnow().timestamp()  # converting from datetime
-
-# converting epoch to datetime
-curr_utc_datetime = datetime.utcfromtimestamp(time.time())
-
-# strip the milliseconds from the time and convert to string
-curr_local_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-curr_utc_str = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(time.time()))
-
-# getting the minutes/seconds etc.
-curr_local_datetime.minute
-
-# adding minutes/seconds to a datetime
-# far easier to convert to epoch and add seconds
-curr_local_datetime += datetime.timedelta(minutes=1, seconds=1)
-curr_utc_epoch = time.time() + 61
-```
-
 ### Bit manipulation
 
 ```python
@@ -406,20 +354,7 @@ logging.basicConfig(filename='logfile.log',
                     level=logging.DEBUG)
 ```
 
-### File
 
-File open modes
-
-| Char | Meaning                                                         | Further desc                                                                                                                                               |
-| ---- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 'r'  | open for reading (default)                                      |                                                                                                                                                            |
-| 'w'  | open for writing, truncating the file first                     |                                                                                                                                                            |
-| 'x'  | open for exclusive creation, failing if the file already exists |                                                                                                                                                            |
-| 'a'  | open for writing, appending to the end of the file if it exists |                                                                                                                                                            |
-| 'b'  | binary mode                                                     | Return contents as bytes objects without any decoding                                                                                                      |
-| 't'  | text mode (default)                                             | Contents of the file are returned as str, the bytes having been first decoded using a platform-dependent encoding or using the specified encoding if given |
-| '+'  | open a disk file for updating (reading and writing)             |                                                                                                                                                            |
-| 'U'  | universal newlines mode (deprecated)                            |                                                                                                                                                            |
 
 ## Time complexity
 
