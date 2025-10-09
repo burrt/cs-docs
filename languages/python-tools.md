@@ -1,12 +1,16 @@
 # Python Tools
 
-* [Basics](#basics)
-
 ## Basics
+
+#### virtualenv
+
+
+
+#### pipenv
 
 Similar to how virtual environments work in Python, but also for Pip.
 
-Actually super handy since it can create a new virtualenv using a specific version of Python that you've installed.
+Actually super handy since it can create a new `virtualenv` using a specific version of Python that you've installed.
 
 ```bash
 # if a Pipfile exists, install all package dependencies

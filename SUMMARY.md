@@ -23,9 +23,9 @@
 * [C# Notes](languages/cs-notes.md)
 * [C# Tips](languages/cs-tips.md)
 * [Python Notes](languages/python-notes.md)
+* [Python Tools](languages/python-tools.md)
 * [VHDL Notes](languages/vhdl-notes.md)
 * [VHDL Tips](languages/vhdl-tips.md)
-* [Python Tools](languages/python-tools.md)
 
 ## Other
 
