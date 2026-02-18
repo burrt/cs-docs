@@ -22,6 +22,7 @@
 * [C Tips](languages/c-tips.md)
 * [C# Notes](languages/cs-notes.md)
 * [C# Tips](languages/cs-tips.md)
+* [Elixir Notes](languages/elixir-notes.md)
 * [Python Notes](languages/python-notes.md)
 * [Python Tools](languages/python-tools.md)
 * [VHDL Notes](languages/vhdl-notes.md)
