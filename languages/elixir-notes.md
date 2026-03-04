@@ -17,7 +17,6 @@ description: Basics
 ```elixir
 # concat
 iex> [1, 2, 3] ++ [4, 5, 6] # [1, 2, 3, 4, 5, 6]
-
 # subtract
 iex> [1, true, 2, false, 3, true] -- [true, false] # [1, 2, 3, true]
 ```
@@ -62,6 +61,16 @@ case get_id() do
 end
 ```
 
+### Keyword List
+
+A list of tuples, first element must be an atom and the keys are ordered.
+
+```elixir
+[{:a, 1}, {:b, 2}]
+# or 
+[a: 1, b: 2]
+```
+
 ### Anonymous functions
 
 Need to use the `.` on the variable that is assigned and is used to avoid ambiguity with module methods.
@@ -78,4 +87,25 @@ iex> my_func = &Math.square/1
 iex> my_func.(2)
 iex> Enum.map([1, 2], my_func)
 iex> Enum.map([1, 2], &Math.square/1) # better!
+```
+
+### with
+
+```elixir
+with {:ok, user} <- fetch_user(id),
+     {:ok, profile} <- fetch_profile(user),
+     {:ok, email} <- get_email(profile) do
+  # This block ONLY runs if every "<-" above matched perfectly
+  send_email(email)
+else
+  # This block runs if ANY of the steps above failed to match
+  {:error, :not_found} -> "Something was missing"
+  {:error, reason} -> "Failed because: #{reason}"
+end
+
+# steps:
+# The Match: It runs fetch_user(id). If the result is {:ok, user}, it binds that user variable and moves to the next line.
+#The Chain: It runs fetch_profile(user). If this returns {:error, :timeout}, it realizes this does not match the pattern {:ok, profile}.
+# The Exit: It stops right there. It doesn't even try to run get_email. It jumps straight to the else block.
+# The Return: The whole with block returns whatever the last executed line produced.
 ```
