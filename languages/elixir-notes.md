@@ -15,10 +15,12 @@ description: Basics
 ### (Linked) Lists
 
 ```elixir
-# concat
+# concat O(n)
 iex> [1, 2, 3] ++ [4, 5, 6] # [1, 2, 3, 4, 5, 6]
 # subtract
 iex> [1, true, 2, false, 3, true] -- [true, false] # [1, 2, 3, true]
+iex> cons = &[&1 | &2]
+iex> cons.(1, [2, 3]) # [1, 2, 3]
 ```
 
 ### Tuples
@@ -30,6 +32,8 @@ iex> {:ok, "hello"}
 iex> tuple_size({:ok, "hello"})  # 2
 iex> put_elem(tuple, 1, "world") # {:ok, "world"}
 iex> tuple                       # {:ok, "hello"}
+iex> fun = &{&1, &2}
+iex> fun.(1, 2) # {1, 2}
 
 # more real-world usage
 user_tuple = {:ok, "Geoffrey", "London"}
@@ -87,6 +91,12 @@ iex> my_func = &Math.square/1
 iex> my_func.(2)
 iex> Enum.map([1, 2], my_func)
 iex> Enum.map([1, 2], &Math.square/1) # better!
+
+# &1 is used as a value placeholder
+# equivalent to fn x -> x * 2 end
+iex> double = &(&1 * 2)
+iex> double.(2) # 4
+
 ```
 
 ### with
@@ -105,7 +115,24 @@ end
 
 # steps:
 # The Match: It runs fetch_user(id). If the result is {:ok, user}, it binds that user variable and moves to the next line.
-#The Chain: It runs fetch_profile(user). If this returns {:error, :timeout}, it realizes this does not match the pattern {:ok, profile}.
+# The Chain: It runs fetch_profile(user). If this returns {:error, :timeout}, it realizes this does not match the pattern {:ok, profile}.
 # The Exit: It stops right there. It doesn't even try to run get_email. It jumps straight to the else block.
 # The Return: The whole with block returns whatever the last executed line produced.
+```
+
+### Structs
+
+```elixir
+# maps can use map[:a]
+iex> map = %{a: 1, b: 2}
+iex> map[:a]
+iex> %{map | a: 3} # %{a: 3, b: 2}
+
+defmodule User do
+  defstruct name: "John", age: 27
+end
+
+iex> %User{} # %User{age: 27, name: "John"}
+iex> jane = %User{name: "Jane"} # %User{age: 27, name: "Jane"}
+iex> jane.name
 ```
