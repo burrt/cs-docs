@@ -138,3 +138,23 @@ iex> %User{} # %User{age: 27, name: "John"}
 iex> jane = %User{name: "Jane"} # %User{age: 27, name: "Jane"}
 iex> jane.name
 ```
+
+### Enum
+
+```elixir
+iex> Enum.map(1..3, fn x -> x * 2 end) # [1, 4, 6]
+iex> Enum.map(%{1 => 2, 3 => 4}, fn {k, v} -> k * v end) # [2, 12]
+
+```
+
+### |>
+
+Takes the output from the expression on its left side and passes it as the **first** argument to the function call on its right side. Nothing quite like it in C# but the LINQ / Select is quite close.
+
+```elixir
+# Goal: Get the sum of the squares of even numbers from 1 to 10
+1..10
+|> Enum.filter(fn x -> rem(x, 2) == 0 end)  # Keep only even numbers
+|> Enum.map(fn x -> x * x end)             # Square them or &(&1 * &1)
+|> Enum.sum()                              # Add them up -> Result: 220
+```
