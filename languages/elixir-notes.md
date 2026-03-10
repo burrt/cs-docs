@@ -37,8 +37,11 @@ iex> fun.(1, 2) # {1, 2}
 
 # more real-world usage
 user_tuple = {:ok, "Geoffrey", "London"}
-{:ok, name, city} = user_tuple
+{:ok, name, city} = user_tuple # pattern matching
 iex> name # "Geoffrey"
+no_atom_tuple = { 1 => 2, 3 => 4 } # for keys not an atom
+iex> no_atom_tuple[1] # 2
+iex> %{ 1 => val } = no_atom_tuple # 2
 
 # essentially method overloading but no static type checks!
 # can use Guards to do similar and order matters
@@ -58,7 +61,6 @@ end
 # variable pinning
 # below is the equivalent of: if (get_id() == const_id)
 const_id = "123"
-
 case get_id() do
   {:ok, ^const_id} -> "Found the ID!"
   {:ok, other_id} ->  "Found a DIFFERENT ID: #{other_id}"
