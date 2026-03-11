@@ -139,12 +139,26 @@ iex> jane = %User{name: "Jane"} # %User{age: 27, name: "Jane"}
 iex> jane.name
 ```
 
+### Modules and functions
+
+Modules in Elixir are like static classes in C#/.
+
+```elixir
+defmodule Tool do
+    defstruct [:name, :brand, id: 0]
+    def get_id(tool), do: tool.id
+    def format_id(tool, prefix \\ "ID-"), do: "#{prefix}#{tool.id}"
+end
+
+iex> tool = %Tool{id: 10}
+iex> Tool.get_id(tool)
+```
+
 ### Enum
 
 ```elixir
 iex> Enum.map(1..3, fn x -> x * 2 end) # [1, 4, 6]
 iex> Enum.map(%{1 => 2, 3 => 4}, fn {k, v} -> k * v end) # [2, 12]
-
 ```
 
 ### |>
