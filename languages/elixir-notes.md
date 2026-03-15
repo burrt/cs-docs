@@ -155,6 +155,8 @@ iex> struct!(tool, [id: 99]) # a way to dynamic update
 
 ### Enum
 
+[https://hexdocs.pm/elixir/enum-cheat.html](https://hexdocs.pm/elixir/enum-cheat.html)
+
 ```elixir
 iex> Enum.map(1..3, fn x -> x * 2 end) # [1, 4, 6]
 iex> Enum.map(%{1 => 2, 3 => 4}, fn {k, v} -> k * v end) # [2, 12]
@@ -169,5 +171,27 @@ Takes the output from the expression on its left side and passes it as the **fir
 1..10
 |> Enum.filter(fn x -> rem(x, 2) == 0 end)  # Keep only even numbers
 |> Enum.map(fn x -> x * x end)             # Square them or &(&1 * &1)
-|> Enum.sum()                              # Add them up -> Result: 220
+|> Enum.sum()                              # Add them up -> Result: 220`
+```
+
+### try, catch, rescue, after, else
+
+* **rescue**
+  * for catching runtime errors and always an Exception struct
+* **catch**
+  * catching anything, or something we deliberately raise
+* **else**
+  * only runs if there were no exceptions
+
+```elixir
+# interesting example with variable scoping
+what_happened =
+  try do
+    raise "fail"
+    :did_not_raise
+  rescue
+    _ -> :rescued
+  end
+iex> what_happened
+:rescued
 ```
