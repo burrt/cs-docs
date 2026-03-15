@@ -39,9 +39,6 @@ iex> fun.(1, 2) # {1, 2}
 user_tuple = {:ok, "Geoffrey", "London"}
 {:ok, name, city} = user_tuple # pattern matching
 iex> name # "Geoffrey"
-no_atom_tuple = { 1 => 2, 3 => 4 } # for keys not an atom
-iex> no_atom_tuple[1] # 2
-iex> %{ 1 => val } = no_atom_tuple # 2
 
 # essentially method overloading but no static type checks!
 # can use Guards to do similar and order matters
@@ -122,13 +119,14 @@ end
 # The Return: The whole with block returns whatever the last executed line produced.
 ```
 
-### Structs
+### Structs and maps
 
 ```elixir
 # maps can use map[:a]
 iex> map = %{a: 1, b: 2}
 iex> map[:a]
 iex> %{map | a: 3} # %{a: 3, b: 2}
+iex> non_atom_map = %{ 1 => 2, 3 => 4 }
 
 defmodule User do
   defstruct name: "John", age: 27
@@ -152,6 +150,7 @@ end
 
 iex> tool = %Tool{id: 10}
 iex> Tool.get_id(tool)
+iex> struct!(tool, [id: 99]) # a way to dynamic update
 ```
 
 ### Enum
