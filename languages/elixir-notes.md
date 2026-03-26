@@ -125,8 +125,8 @@ end
 # maps can use map[:a]
 iex> map = %{a: 1, b: 2}
 iex> map[:a]
-iex> %{map | a: 3} # %{a: 3, b: 2}
-iex> non_atom_map = %{ 1 => 2, 3 => 4 }
+iex> %{map | a: 3, b: 6} # %{a: 3, b: 6}
+iex> non_atom_map = %{ 1 => 2, 3 => 4 } # cannot mix atom and non-atom maps
 
 defmodule User do
   defstruct name: "John", age: 27
