@@ -98,7 +98,9 @@ iex> double.(2) # 4
 
 ```
 
-### with
+### Conditions
+
+#### with / if
 
 ```elixir
 with {:ok, user} <- fetch_user(id),
@@ -117,6 +119,14 @@ end
 # The Chain: It runs fetch_profile(user). If this returns {:error, :timeout}, it realizes this does not match the pattern {:ok, profile}.
 # The Exit: It stops right there. It doesn't even try to run get_email. It jumps straight to the else block.
 # The Return: The whole with block returns whatever the last executed line produced.
+
+if condition do
+  "true"
+else
+  "false"
+end
+
+result = if condition, do: "true" else "false  
 ```
 
 ### Structs and maps
