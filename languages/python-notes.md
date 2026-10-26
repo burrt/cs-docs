@@ -69,29 +69,15 @@ print("In global scope:", spam)
 
 There are three sequence types:
 
-* [list](https://docs.python.org/3.3/library/stdtypes.html#list)
-* [tuple](https://docs.python.org/3.3/library/stdtypes.html#tuple)
-* [range](https://docs.python.org/3.3/library/stdtypes.html#range)
+* [list](https://docs.python.org/3.3/library/stdtypes.html#list) - these are mutable sequences that are used to store collections of homogeneous items.
+* [tuple](https://docs.python.org/3.3/library/stdtypes.html#tuple) - these are immutable sequences and assignment to its members aren't possible however they may contain mutable objects like lists.
+* [range](https://docs.python.org/3.3/library/stdtypes.html#range) - the `range` type is similar to Python 2.7 `xrange` where it has constant space cost - small memory usage like generators.
 
-### List
+### Collections
 
-These are mutable sequences that are used to store collections of homogeneous items.
-
-#### Deque
-
-Supports fewer operations but faster for adding/removing from the head/tail of the queue - `O(1)`. See [the docs](https://docs.python.org/3/library/collections.html#collections.deque).
-
-### Tuple
-
-These are immutable sequences and assignment to its members aren't possible however they may contain mutable objects like lists.
-
-#### Named tuple
-
-See [the docs for more info](https://docs.python.org/3.3/library/collections.html#collections.namedtuple).
-
-### Range
-
-The `range` type is similar to Python 2.7 `xrange` where it has constant space cost - small memory usage like generators.
+* [deque](https://docs.python.org/3/library/collections.html#collections.deque) - supports fewer operations but faster for adding/removing from the head/tail of the queue - `O(1)`. See [the docs](https://docs.python.org/3/library/collections.html#collections.deque).
+* [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple) - are immutable sequences, typically used to store collections of heterogeneous data (such as the 2-tuples produced by the [`enumerate()`](https://docs.python.org/3/builtins/functions.html#enumerate) built-in)
+* [set](https://docs.python.org/3/builtins/stdtypes.html#set) - an unordered collection of distinct [hashable](https://docs.python.org/3/glossary.html#term-hashable) objects. Common uses include membership testing, removing duplicates from a sequence, and computing mathematical operations such as intersection, union, difference, and symmetric difference.
 
 ### Misc
 
@@ -360,7 +346,7 @@ logging.basicConfig(filename='logfile.log',
 
 Some of the optimized data structures Python for better performance summarized from the [Python wiki](https://wiki.python.org/moin/TimeComplexity).
 
-For additional information for time complexity, see my [other page](https://github.com/burrt/debian/wiki/Sorting-&-searching#big-o)
+For additional information for time complexity, see my other notes: [https://cse-docs.gitbook.io/notes/fundamentals/sorting-and-searching#time-complexity](https://cse-docs.gitbook.io/notes/fundamentals/sorting-and-searching#time-complexity).
 
 ### list
 
