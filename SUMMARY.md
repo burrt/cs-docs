@@ -27,6 +27,7 @@
 * [Python Tools](languages/python-tools.md)
 * [VHDL Notes](languages/vhdl-notes.md)
 * [VHDL Tips](languages/vhdl-tips.md)
+* [Terraform Notes](languages/terraform-notes.md)
 
 ## Other
 
