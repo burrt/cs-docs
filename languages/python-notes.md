@@ -626,124 +626,397 @@ def decorator_with_arguments(arg1, arg2):
     return wrapper
 ```
 
-## Threading
+### Modern type hints
 
-Python 3.6 now provides some awesome simplification for threading. See [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html).
+[Official typing reference](https://docs.python.org/3/library/typing.html)
 
-```python
-import concurrent.futures
+Hints describe expected values to editors and type checkers. Python does **not** automatically validate or convert arguments, return values, or collection contents.
 
-# We can use a with statement to ensure threads are cleaned up promptly
-# optional chunksize=1 can split a large iterable in map for speedup
-with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-    execute.map(func, iterable)
+| Meaning                  | Modern spelling   | Available since |
+| ------------------------ | ----------------- | --------------- |
+| List of strings          | `list[str]`       | 3.9             |
+| String keys, int values  | `dict[str, int]`  | 3.9             |
+| Fixed two-item tuple     | `tuple[str, int]` | 3.9             |
+| Any-length tuple of ints | `tuple[int, ...]` | 3.9             |
+| Either of two types      | `str \| bytes`    | 3.10            |
+| Value may be absent      | `str \| None`     | 3.10            |
 
-    pending = []
-    pending.append(executor.submit(func, *args))  # or use r.result()
+Prefer these over `typing.List`, `typing.Dict`, `typing.Tuple`, `Union`, and `Optional` in modern code. The older spellings still matter when supporting older interpreters.
 
-    # useful if delegating multiple tasks to threads
-    for future in concurrent.futures.as_completed(pending):
-        try:
-            r = future.result(timeout=10)
-        except concurrent.futures.TimeoutError:
-            print('Thread timeout of task')
-```
-
-## Regex
-
-| Symbol     | Meaning                                                                                                                                                                                                                                                                                                                                           |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `a, X, 9`  | Ordinary characters just match themselves exactly. The meta-characters which do not match themselves because they have special meanings are: `.` `^` `$` `*` `+` `?` `{` `[` `]` `\` `\|` `(` `)`                                                                                                                                                 |
-| `.`        | A period matches **any single character except** newline                                                                                                                                                                                                                                                                                          |
-| `\w`       | Matches a "word" character: a letter or digit or underbar `[a-zA-Z0-9_]`. Note that although "word" is the mnemonic for this, it only matches a single word char, not a whole word.                                                                                                                                                               |
-| `\W`       | Matches any non-word character.                                                                                                                                                                                                                                                                                                                   |
-| `\b`       | Boundary between word and non-word                                                                                                                                                                                                                                                                                                                |
-| `\s`       | Matches a **single** whitespace character - space, newline, return, tab, form `[ \n\r\t\f]`.                                                                                                                                                                                                                                                      |
-| `\S`       | Matches any **non-whitespace** character.                                                                                                                                                                                                                                                                                                         |
-| `\t, \n,`  | Tab, newline, return.                                                                                                                                                                                                                                                                                                                             |
-| `\d`       | Decimal digit `[0-9]` (some older regex utilities do not support but `\d`, but they all support `\w` and `\s`).                                                                                                                                                                                                                                   |
-| `^, $`     | Match the start or end of the string respectively.                                                                                                                                                                                                                                                                                                |
-| `\`        | <p>Inhibit the <strong>specialness</strong> of a character.<br>So, for example, use <code>\.</code> to match a period or <code>\\</code> to match a slash. If you are unsure if a character has special meaning, such as <code>@</code>, you can put a slash in front of it, <code>\@</code>, to make sure it is treated just as a character.</p> |
-
-### match, search, findall
-
-* `match`: only finds the string on the **beginning** i.e. ignore space delimited strings apart from the first one!
-* `search`: similar to `match` but it will return the **first match** of the string.
-* `findall`: will return **all** matches as a list and we can also use group extraction quite nicely!
-
-### Tips
-
-* `{1-4}` will match 104 times!
-
-### Email
+#### Nullable versus an optional argument
 
 ```python
-str = 'purple alice-b@google.com monkey dishwasher'
-match = re.search(r'\w+@\w+', str)
-if match:
-    print(match.group())  ## 'b@google'
+# Python 3.10+
+def describe(label: str | None) -> str:
+    return "Unnamed" if label is None else label
+
+def describe_default(label: str | None = None) -> str:
+    return describe(label)
+
+describe(None)       # "Unnamed"
+# describe()        # TypeError: argument still required
+describe_default()  # "Unnamed"
 ```
 
-### Square brackets
+`T | None` allows a value of `None`; a default permits omission of the argument.
+
+`Any` allows unchecked operations to spread through code. Prefer `object` for an unknown value when you intend to narrow its type before using it:
 
 ```python
-match = re.search(r'[\w.-]+@[\w.-]+', str)
-if match:
-    print(match.group())  ## 'alice-b@google.com'
+# Python 3.10+
+def normalise_label(value: object) -> str:
+    if isinstance(value, str):
+        return value.strip()  # Narrowed to str here.
+    raise TypeError("label must be a string")
+
+normalise_label("  Ready  ")  # "Ready"
 ```
 
-### Group extraction
+#### Typed dictionaries: records with named fields
+
+[Official TypedDict specification](https://typing.python.org/en/latest/spec/typeddict.html)
 
 ```python
-str = 'purple alice-b@google.com monkey dishwasher'
-match = re.search('([\w.-]+)@([\w.-]+)', str)
-if match:
-    print(match.group())   ## 'alice-b@google.com' (the whole match)
-    print(match.group(1))  ## 'alice-b' (the username, group 1)
-    print(match.group(2))  ## 'google.com' (the host, group 2)
+# Python 3.11+; TypedDict itself arrived in 3.8.
+from typing import Literal, NotRequired, TypedDict
+
+class Delivery(TypedDict):
+    reference: str
+    state: Literal["pending", "sent"]
+    tracking_url: NotRequired[str]
+
+parcel: Delivery = {"reference": "P-104", "state": "pending"}
+parcel.get("tracking_url")  # None
+isinstance(parcel, dict)    # True: an ordinary dictionary at runtime.
 ```
 
-### Find all
+* `Literal` restricts the values accepted by a type checker; it does not enforce them at runtime.
+* `NotRequired[str]` allows the **key to be missing**. If present, its value must be a string.
+* `str | None` allows a **present key with a None value**. These are different contracts.
+* `Required` marks a required key inside a `TypedDict` declared with `total=False`.
+* Validate external JSON separately; assigning an annotation does not check its contents.
+
+#### Protocols: depend on capabilities
+
+[Official protocol specification](https://typing.python.org/en/latest/spec/protocol.html)
 
 ```python
-## Suppose we have a text with many email addresses
-str = 'purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+# Python 3.8+
+from io import StringIO
+from typing import Protocol
 
-## Here re.findall() returns a list of all the found email strings
-## ['alice@google.com', 'bob@abc.com']
-emails = re.findall(r'[\w\.-]+@[\w\.-]+', str)
-for email in emails:
-    # do something with each found email string
-    print(email)
+class TextReader(Protocol):
+    def read(self) -> str: ...
+
+
+def read_title(source: TextReader) -> str:
+    return source.read().splitlines()[0]
+
+read_title(StringIO("Release notes\nDetails"))  # "Release notes"
+```
+
+`StringIO` need not inherit from `TextReader`. A compatible `read()` method satisfies the contract for static checking. This lets a function accept files, in-memory streams, or test doubles without depending on a concrete class. This example assumes a non-empty document.
+
+#### Generics and type aliases
+
+[Python 3.12: type parameters and aliases](https://docs.python.org/3/whatsnew/3.12.html#type-parameter-syntax)
+
+```python
+# Python 3.12+
+from collections.abc import Sequence
+
+# T connects the element type of the input to the return type.
+def first[T](items: Sequence[T]) -> T:
+    return items[0]
+
+first([10, 20])        # 10; inferred return type: int
+first(["red", "blue"]) # "red"; inferred return type: str
+# first([])           # IndexError: typing does not guarantee non-empty input.
+
+type Coordinate = tuple[float, float]
+type Lookup[T] = dict[str, T]
+
+origin: Coordinate = (0.0, 0.0)
+stock: Lookup[int] = {"pencils": 12}
+```
+
+`type Coordinate = ...` creates a type alias, not a new runtime class. Use `collections.abc` for interfaces such as `Iterable`, `Sequence`, `Mapping`, and `Callable`; use concrete types when callers need their specific operations.
+
+Useful names to recognise, without memorising the entire typing library:
+
+| Name        | Since | Purpose                                                        |
+| ----------- | ----- | -------------------------------------------------------------- |
+| `Final`     | 3.8   | Checker flags reassignment; no runtime immutability.           |
+| `Annotated` | 3.9   | Attach metadata; a consuming tool decides how to interpret it. |
+| `Self`      | 3.11  | Return the same class type, including subclasses.              |
+| `override`  | 3.12  | Checker verifies a method overrides an inherited member.       |
+
+`typing_extensions` backports many typing names. It cannot make new grammar such as `def first[T]` parse on an older interpreter. For older targets, use `TypeVar` and older alias syntax instead.
+
+### Dataclasses: concise value objects
+
+[Official dataclass reference](https://docs.python.org/3/library/dataclasses.html)
+
+```python
+# Python 3.10+; dataclass itself arrived in 3.7.
+from dataclasses import dataclass, field, replace
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Document:
+    title: str
+    revision: int = 1
+    tags: list[str] = field(default_factory=list)
+
+first_draft = Document(title="Runbook")
+second_draft = replace(first_draft, revision=2)
+
+first_draft.revision   # 1
+second_draft.revision  # 2
+Document(title="A") == Document(title="A")  # True
+# first_draft.revision = 3  # FrozenInstanceError
+```
+
+| Setting           | Result                                                     |
+| ----------------- | ---------------------------------------------------------- |
+| `@dataclass`      | Generates initialiser, representation, and field equality. |
+| `default_factory` | Calls a factory for each instance's default value.         |
+| `frozen=True`     | Blocks ordinary field reassignment; shallow immutability.  |
+| `slots=True`      | Generates slots; normally prevents extra instance fields.  |
+| `kw_only=True`    | Generated initialiser requires field arguments by keyword. |
+
+`first_draft.tags.append("draft")` still works: freezing the object does not freeze its list. Use `tuple[str, ...]` for immutable tags. `replace()` is shallow too: unchanged fields refer to the same objects. Annotations do not validate field types. Ordering comparisons are not generated unless requested with `order=True`.
+
+### Argument restrictions and assignment expressions
+
+[Python 3.8 language additions](https://docs.python.org/3/whatsnew/3.8.html#new-features)
+
+```python
+# Python 3.8+
+def resize(image, /, width, *, preserve_ratio=True):
+    return image, width, preserve_ratio
+
+resize("photo.png", 640)                       # ("photo.png", 640, True)
+resize("photo.png", width=640, preserve_ratio=False)
+# resize(image="photo.png", width=640)         # TypeError
+# resize("photo.png", 640, False)              # TypeError
+```
+
+* Before `/`: positional-only. Here, `image` cannot be passed by keyword.
+* Between `/` and `*`: positional or keyword. Here, `width` accepts either.
+* After bare `*`: keyword-only. Here, `preserve_ratio=False` must be named.
+* `/` in ordinary Python function definitions arrived in 3.8. Keyword-only parameters already existed in 3.0.
+
+`:=` assigns a value inside an expression when keeping that value is useful:
+
+```python
+# Python 3.8+
+import re
+
+line = "order=482"
+if match := re.fullmatch(r"order=(\d+)", line):
+    order_number = int(match.group(1))
+    print(f"{order_number=}")  # order_number=482; debug f-string syntax.
+```
+
+Use it to avoid duplicate work, rather than compressing several steps. Parentheses matter in comparisons: `if (count := len(items)) > 5:` stores the length; `if count := len(items) > 5:` stores a Boolean.
+
+### Dictionary and string conveniences
+
+[Python 3.9 additions](https://docs.python.org/3/whatsnew/3.9.html)
+
+```python
+# Python 3.9+
+defaults = {"timeout": 10, "retries": 2}
+overrides = {"timeout": 30}
+settings = defaults | overrides  # {"timeout": 30, "retries": 2}
+defaults                        # {"timeout": 10, "retries": 2}; unchanged.
+defaults |= overrides           # Updates defaults in place.
+
+"report.csv".removesuffix(".csv")  # "report"
+"prefix_name".removeprefix("prefix_")  # "name"
+"report.txt".removesuffix(".csv")  # "report.txt"; unmatched stays unchanged.
+```
+
+Dictionary union is shallow and the right-hand value wins for duplicate keys. It does not recursively merge nested dictionaries. `removeprefix` and `removesuffix` remove one exact string; `strip`, `lstrip`, and `rstrip` remove characters from a set.
+
+Dictionary insertion order became a language guarantee in **3.7**; it was a CPython implementation detail in 3.6. Replacing a value keeps its key's position; deleting and reinserting moves it to the end. Dictionary equality still ignores order.
+
+Python **3.12** also relaxed f-string parsing: expressions can reuse the outer quote style, contain comments, and use backslashes. The basic f-string syntax itself dates to 3.6.
+
+```python
+# Python 3.12+
+person = {"name": "Ada"}
+f"Hello, {person["name"]}!"  # "Hello, Ada!"
+```
+
+### Structural pattern matching
+
+[Official match tutorial](https://docs.python.org/3/tutorial/controlflow.html#match-statements)
+
+```python
+# Python 3.10+
+def describe_event(event: object) -> str:
+    match event:
+        case {"kind": "move", "position": [int(x), int(y)]}:
+            return f"Move to ({x}, {y})"
+        case {"kind": "message", "text": str(text)} if text.strip():
+            return text.strip()
+        case _:
+            return "Unsupported event"
+
+describe_event({"kind": "move", "position": [2, 5], "id": 99})
+# "Move to (2, 5)"; extra mapping keys are allowed.
+describe_event({"kind": "message", "text": "  Hello  "})  # "Hello"
+```
+
+* Matches structure and binds names; useful for several distinct input shapes.
+* `int(x)` checks and captures an integer; it does not convert a string to one. `bool` is an `int` subclass, so this pattern also accepts booleans.
+* Bare names usually **capture**, rather than compare to existing variables. Use literals or qualified constants such as `State.READY` to compare.
+* `_` is the wildcard. The first matching case whose guard succeeds runs; there is no fall-through.
+* A sequence pattern can match lists or tuples, but not strings or bytes.
+
+### Safer iteration and useful standard-library additions
+
+[Iterator helpers](https://docs.python.org/3/library/itertools.html) · [Python 3.11 additions](https://docs.python.org/3/whatsnew/3.11.html)
+
+```python
+# Python 3.10+
+names = ["Ada", "Lin"]
+scores = [8, 9]
+dict(zip(names, scores, strict=True))  # {"Ada": 8, "Lin": 9}
+# list(zip(["Ada"], [8, 9], strict=True))  # ValueError: lengths differ.
+
+from itertools import pairwise
+list(pairwise([10, 15, 12]))  # [(10, 15), (15, 12)]
+```
+
+Normal `zip` silently stops at the shortest input. `strict=True` raises when a mismatch is encountered **during iteration**, not necessarily when the iterator is created.
+
+```python
+# Python 3.12+
+from itertools import batched
+
+list(batched(range(5), 2))  # [(0, 1), (2, 3), (4,)]
+# Python 3.13+: strict=True rejects an incomplete final batch.
 ```
 
 ```python
-# Open file
-f = open('test.txt', 'r')
+# Python 3.11+
+import tomllib
 
-# Feed the file text into findall(); it returns a list of all the found strings
-strings = re.findall(r'some pattern', f.read())
+config = tomllib.loads('[storage]\nlimit = 25\n')
+config["storage"]["limit"]  # 25
+# For files: with open("settings.toml", "rb") as f: tomllib.load(f)
 ```
+
+`tomllib` reads TOML; it does not write it. Another useful addition is `zoneinfo.ZoneInfo` (3.9) for IANA time zones such as `Europe/London`, using system time-zone data or the separately installed `tzdata` package. Prefer aware datetimes for real timestamps; `datetime.utcnow()` is deprecated since 3.12 in favour of `datetime.now(timezone.utc)`.
+
+#### Caching repeated pure calculations
+
+[Official functools reference](https://docs.python.org/3/library/functools.html#functools.cache)
 
 ```python
-str = 'purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
-tuples = re.findall(r'([\w\.-]+)@([\w\.-]+)', str)
-print(tuples)  ## [('alice', 'google.com'), ('bob', 'abc.com')]
-for tuple in tuples:
-    print(tuple[0])  ## username
-    print(tuple[1])  ## host
+# Python 3.9+
+from functools import cache
+
+@cache
+def count_routes(rows: int, columns: int) -> int:
+    # Grid routes using only right/down steps; positive dimensions required.
+    if rows < 1 or columns < 1:
+        raise ValueError("dimensions must be positive")
+    if rows == 1 or columns == 1:
+        return 1
+    return count_routes(rows - 1, columns) + count_routes(rows, columns - 1)
+
+count_routes(3, 3)  # 6
+count_routes(3, 3)  # 6; reused from cache.
+count_routes.cache_clear()
 ```
 
-### Options
+`cache` is unbounded: arguments and results remain referenced until cleared. Arguments must be hashable. Use `lru_cache(maxsize=...)` for a bounded cache. Avoid caching changing external state or returning mutable results that callers may alter. Memoisation reduces repeated work here, but does not remove recursion depth limits.
 
-* `IGNORECASE`: Ignore upper/lowercase differences for matching, so 'a' matches both 'a' and 'A'.
-* `DOTALL`: Allow dot (.) to match newline -- normally it matches anything **but** newline. This can trip you up - you think `.*` matches everything, but by default it does **not** go past the end of a line. Note that `\s` (whitespace) includes newlines, so if you want to **match a run of whitespace that may include a newline**, you can just use `\s*`
-* `MULTILINE`:Within a string made of many lines, allow `^` and `$` to match the start and end of each line. Normally `^/$` would just match the start and end of the whole string.
+### Async tasks and grouped failures
+
+[Official asyncio tasks reference](https://docs.python.org/3/library/asyncio-task.html)
 
 ```python
-# for search()` or `findall()` etc.
-re.search(pattern, str, re.IGNORECASE)
+# Python 3.11+
+import asyncio
+
+async def check_name(name: str) -> str:
+    await asyncio.sleep(0)  # Stand-in for asynchronous I/O; yields control.
+    return name.upper()
+
+async def main() -> list[str]:
+    async with asyncio.TaskGroup() as group:
+        first = group.create_task(check_name("alpha"))
+        second = group.create_task(check_name("beta"))
+    # Both tasks have completed successfully before these results are read.
+    return [first.result(), second.result()]
+
+asyncio.run(main())  # ["ALPHA", "BETA"]
 ```
+
+* Calling an `async def` function creates a coroutine; await or schedule it to execute it.
+* `TaskGroup` waits for its tasks. A task failure other than cancellation normally cancels siblings and raises an exception group after cleanup.
+* `asyncio.timeout(seconds)` (3.11) limits a block's running time through cancellation.
+* `asyncio.to_thread(sync_function, ...)` (3.9) can offload blocking I/O. A blocking call directly inside an async function blocks the event loop.
+* Do not swallow `CancelledError`. Call `asyncio.run()` from synchronous entry-point code; in an already running loop, await instead.
+
+Python 3.11 added `ExceptionGroup` and `except*` for handling matching subgroups of multiple exceptions. Ordinary `except ValueError` does not unpack an exception group. Learn the mechanism if working with concurrent failures; a normal single-error function rarely needs it.
+
+### Newest features: recognise before adopting
+
+[Python 3.13](https://docs.python.org/3/whatsnew/3.13.html) · [Python 3.14](https://docs.python.org/3/whatsnew/3.14.html) · [Python 3.15](https://docs.python.org/3/whatsnew/3.15.html)
+
+#### Python 3.13
+
+Type parameters can have defaults, for example `class Box[T = str]: ...`. New typing tools include `ReadOnly` for TypedDict fields and `TypeIs` for user-defined narrowing. These are type-checker contracts, not runtime freezing or validation.
+
+Free-threaded builds and the JIT first appeared experimentally in 3.13. Free-threaded Python became officially supported, but optional, in 3.14. Do not assume an ordinary interpreter has the GIL disabled, or that concurrent access to shared mutable state is safe.
+
+#### Python 3.14
+
+Annotations are deferred by default. This differs from `from __future__ import annotations`, which stores annotation strings. For runtime inspection, prefer the supported `annotationlib` APIs rather than assuming `__annotations__` contains already-evaluated types; evaluating annotations may execute code.
+
+```python
+# Python 3.14+
+name = "Ada"
+message = t"Hello, {name}!"
+message.strings                 # ("Hello, ", "!")
+message.interpolations[0].value  # "Ada"
+```
+
+A t-string produces a `Template`, not a `str`. Its interpolation expressions are evaluated when created; formatting/processing is separate. It is not automatically safe SQL, HTML, or shell escaping.
+
+#### Python 3.15
+
+```python
+# Python 3.15+
+options = frozendict(timeout=30, retries=2)
+options["timeout"]  # 30
+# options["timeout"] = 10  # TypeError
+
+groups = [["red", "blue"], ["green"]]
+flattened = [*group for group in groups]  # ["red", "blue", "green"]
+```
+
+`frozendict` is shallowly immutable; it is hashable only when its keys and values are hashable. `lazy import json` defers loading until first use, including import failures and side effects; this syntax is restricted to module scope outside `try` blocks. UTF-8 is now the default text encoding; explicit encodings still clarify file contracts. A built-in `sentinel` type supports distinct “not supplied” values. These features require 3.15; do not assume assessment support.
+
+### Corrections to carry into older notes
+
+| Older assumption                       | Accurate Python 3 behaviour                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `range` is an iterator                 | It is an iterable sequence; `iter(range(...))` creates an iterator.                   |
+| `map` and `filter` return lists        | They return iterators; materialise with `list(...)` only when needed.                 |
+| An iterable is necessarily stateless   | Iterators are iterable too, and consumption changes their state.                      |
+| Lists must contain one element type    | Runtime lists may mix types; `list[T]` expresses a static contract.                   |
+| Multiple inheritance uses plain DFS    | Method lookup uses the C3 method resolution order; inspect `Class.__mro__`.           |
+| `issubclass` accepts an instance first | Pass a class; use `isinstance` for an instance.                                       |
+| `print 'text'`, `<>`, `.encode('hex')` | Use `print('text')`, `!=`, and `b'cd'.hex()` respectively.                            |
+| `reduce` is built in                   | Import it from `functools`; prefer a dedicated operation such as `sum` when suitable. |
+| Regex `\d` and `\w` are ASCII-only     | String patterns are Unicode-aware by default; `re.ASCII` restricts these classes.     |
+| Regex repetition is written `{1-4}`    | Use `{1,4}` for one to four repetitions.                                              |
 
 ## Operator precedence
 
