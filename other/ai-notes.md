@@ -12,6 +12,8 @@ A **large language model (LLM)** is a type of artificial intelligence program tr
 
 #### Pretraining
 
+<figure><img src="../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+
 1. initial data set e.g. download the internet (HuggingFace)
 2. tokenisation
    1. reduces the data (e.g. text) down into a unique set of tokens / symbols
@@ -32,6 +34,8 @@ It essentially will retrieve from its "compressed" version of the data it's been
 
 #### Post training
 
+<figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
 Turning a base model into an assistant.
 
 Trains it on human-labeled conversations that we validate and want the assistant to behave. This dataset will be much smaller and will be encoded as tokens so that the LLM can be trainined on. This starts to give the assistant a personality.&#x20;
@@ -41,6 +45,8 @@ We are now using existing LLMs to create post-training datasets e.g. UltraChat.&
 Output: the model then becomes a SFT model.
 
 #### Reinforcement learning
+
+<figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
 Technically it can fall under post-training but can be considered as a whole separate field. It essentially is practicing problems and fine tuning to the best possible outputs. Gives the model an opportunity to practice, trial and error and eliminate suboptimal answers. It's more involved than just that as it leans into "thinking" mode of the problem to verify itself on the solution, and then works to format the solution to a human.
 

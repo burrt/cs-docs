@@ -1,7 +1,7 @@
 # Windows Installer Notes
 
 * [Resources](windows-installer.md#resources)
-* [WiX and Windows Installers](wix-and-windows-installers/)
+* [WiX and Windows Installers](https://github.com/burrt/cs-docs/blob/main/wix-and-windows-installers/README.md)
   * [Components](windows-installer.md#components)
   * [Custom Actions](windows-installer.md#custom-actions)
   * [Windows Service](windows-installer.md#windows-service)
