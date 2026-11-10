@@ -39,6 +39,7 @@
 * [Git Notes](other/git.md)
 * [Go Notes](other/go-revision.md)
 * [Java Notes](other/java-notes.md)
+* [AI Notes](other/ai-notes.md)
 * [Linux Syscall Notes](other/linux-syscalls.md)
 * [Memory Architecture Notes](other/memory-architecture.md)
 * [Networking Notes](other/networking-notes.md)
